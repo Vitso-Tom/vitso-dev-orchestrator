@@ -1,0 +1,80 @@
+═══════════════════════════════════════════════════════════
+  VITSO DEV ORCHESTRATOR - INSTALLATION INSTRUCTIONS
+═══════════════════════════════════════════════════════════
+
+QUICK START (5 Minutes)
+─────────────────────────
+
+1. Ensure Docker is installed and running
+   
+   Windows: Docker Desktop
+   Mac: Docker Desktop
+   Linux: sudo apt install docker.io docker-compose
+
+2. Configure API keys
+   
+   cp backend/.env.template backend/.env
+   nano backend/.env
+   
+   Add at minimum:
+   ANTHROPIC_API_KEY=sk-ant-your-key-here
+
+3. Run setup
+   
+   ./setup.sh
+
+4. Access dashboard
+   
+   Open browser to: http://localhost:3000
+
+═══════════════════════════════════════════════════════════
+
+DOCUMENTATION
+─────────────
+
+Start with: OVERVIEW.md (read this first!)
+Then: QUICKSTART.md
+Full docs: README.md
+
+For portability: docs/PORTABILITY.md
+For cloud: docs/CLOUD_DEPLOYMENT.md
+For migration: docs/MIGRATION_GUIDE.md
+
+═══════════════════════════════════════════════════════════
+
+SUPPORT
+───────
+
+All documentation is included in this package.
+Everything you need is in the docs/ folder.
+
+Key files:
+- OVERVIEW.md: Complete system overview
+- QUICKSTART.md: Get running in 5 minutes
+- README.md: Full documentation
+- docs/PORTABILITY.md: Moving between machines
+- docs/CLOUD_DEPLOYMENT.md: Deploying to cloud
+
+═══════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+───────────────
+
+Can't connect to services:
+  docker-compose logs
+
+Permission denied on scripts:
+  chmod +x *.sh
+
+Port already in use:
+  Edit docker-compose.yml and change ports
+
+Database issues:
+  docker-compose down -v
+  docker-compose up -d
+
+═══════════════════════════════════════════════════════════
+
+Built specifically for Tom @ Vitso Tech
+Fully portable • Cloud-ready • Production-grade
+═══════════════════════════════════════════════════════════

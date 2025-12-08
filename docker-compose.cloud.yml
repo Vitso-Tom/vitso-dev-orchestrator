@@ -1,0 +1,141 @@
+version: '3.8'
+
+# Cloud-Ready Configuration
+# Supports both local and external databases/Redis
+
+services:
+  # PostgreSQL Database (optional - use external in production)
+  postgres:
+    image: postgres:15-alpine
+    container_name: vitso-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vitso}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vitso_dev_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-vitso_dev_orchestrator}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vitso}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - local
+      - full
+
+  # Redis for job queue (optional - use external in production)
+  redis:
+    image: redis:7-alpine
+    container_name: vitso-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - local
+      - full
+
+  # FastAPI Backend (always runs)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vitso-backend
+    environment:
+      # Database connection
+      - DATABASE_URL=${DATABASE_URL:-postgresql://vitso:vitso_dev_pass@postgres/vitso_dev_orchestrator}
+      
+      # Redis connection
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      
+      # AI API Keys
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      
+      # Cloud configuration
+      - CLOUD_PROVIDER=${CLOUD_PROVIDER:-local}
+      - AWS_REGION=${AWS_REGION:-}
+      - AZURE_REGION=${AZURE_REGION:-}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - backend_outputs:/app/outputs
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+    profiles:
+      - app
+      - full
+
+  # RQ Worker for job processing (always runs)
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vitso-worker
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://vitso:vitso_dev_pass@postgres/vitso_dev_orchestrator}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CLOUD_PROVIDER=${CLOUD_PROVIDER:-local}
+    volumes:
+      - ./backend:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - backend_outputs:/app/outputs
+    command: rq worker vitso-jobs --with-scheduler
+    restart: unless-stopped
+    profiles:
+      - app
+      - full
+
+  # React Frontend (always runs)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vitso-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    command: npm run dev -- --host
+    restart: unless-stopped
+    profiles:
+      - app
+      - full
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_outputs:
+    driver: local
+
+# Usage:
+# Local development (all services):
+#   docker-compose --profile full up -d
+#
+# Production with external DB/Redis:
+#   docker-compose --profile app up -d
+#
+# Custom configuration:
+#   Create .env file with custom values
