@@ -1,0 +1,671 @@
+/**
+ * AI Tool Governance Platform - Main Application JavaScript
+ * Handles form interactions, navigation, and API communication
+ * Version: 2.0 - 2025
+ */
+
+class AIGovernanceApp {
+    constructor() {
+        this.currentStep = 1;
+        this.totalSteps = 6;
+        this.assessmentData = {};
+        this.riskCalculator = null;
+        
+        this.init();
+    }
+    
+    init() {
+        this.initializeRiskCalculator();
+        this.setupEventListeners();
+        this.setupTabNavigation();
+        this.setupFormValidation();
+        this.loadDashboardData();
+        this.setupPrecedentSearch();
+    }
+    
+    initializeRiskCalculator() {
+        if (typeof RiskCalculator !== 'undefined') {
+            this.riskCalculator = new RiskCalculator();
+            this.riskCalculator.onRiskUpdate = this.handleRiskUpdate.bind(this);
+        }
+    }
+    
+    setupEventListeners() {
+        // Form navigation
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        if (nextBtn) nextBtn.addEventListener('click', () => this.nextStep());
+        if (prevBtn) prevBtn.addEventListener('click', () => this.prevStep());
+        if (submitBtn) submitBtn.addEventListener('click', (e) => this.submitAssessment(e));
+        
+        // Form inputs for real-time risk calculation
+        const form = document.getElementById('assessment-form');
+        if (form) {
+            form.addEventListener('input', (e) => this.handleFormInput(e));
+            form.addEventListener('change', (e) => this.handleFormInput(e));
+        }
+        
+        // Precedent matching
+        const toolNameInput = document.getElementById('tool_name');
+        const vendorInput = document.getElementById('vendor');
+        
+        if (toolNameInput) {
+            toolNameInput.addEventListener('input', this.debounce(() => this.searchPrecedents(), 300));
+        }
+        if (vendorInput) {
+            vendorInput.addEventListener('input', this.debounce(() => this.searchPrecedents(), 300));
+        }
+        
+        // Dashboard controls
+        this.setupDashboardControls();
+    }
+    
+    setupTabNavigation() {
+        const tabLinks = document.querySelectorAll('[data-tab]');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const tabId = link.getAttribute('data-tab');
+                
+                // Update active tab
+                tabLinks.forEach(l => l.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                link.classList.add('active');
+                const targetTab = document.getElementById(tabId + '-tab');
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                }
+                
+                // Load tab-specific data
+                if (tabId === 'dashboard') {
+                    this.loadDashboardData();
+                } else if (tabId === 'precedents') {
+                    this.loadPrecedents();
+                }
+            });
+        });
+    }
+    
+    setupFormValidation() {
+        const requiredFields = document.querySelectorAll('[required]');
+        
+        requiredFields.forEach(field => {
+            field.addEventListener('blur', () => this.validateField(field));
+            field.addEventListener('input', () => this.clearFieldError(field));
+        });
+    }
+    
+    setupDashboardControls() {
+        // Date range filter
+        const dateRange = document.getElementById('date-range');
+        if (dateRange) {
+            dateRange.addEventListener('change', () => this.filterDashboardData());
+        }
+        
+        // Recent assessments count
+        const recentCount = document.getElementById('recent-count');
+        if (recentCount) {
+            recentCount.addEventListener('change', () => this.updateRecentAssessments());
+        }
+    }
+    
+    handleFormInput(e) {
+        const field = e.target;
+        const value = field.type === 'checkbox' ? field.checked : field.value;
+        
+        // Update assessment data
+        this.assessmentData[field.name || field.id] = value;
+        
+        // Trigger real-time risk calculation
+        if (this.riskCalculator) {
+            this.riskCalculator.calculateRisk(this.assessmentData);
+        }
+        
+        // Update step validation
+        this.validateCurrentStep();
+    }
+    
+    handleRiskUpdate(riskData) {
+        // Update risk preview display
+        const riskScore = document.getElementById('risk-score');
+        const riskLabel = document.getElementById('risk-label');
+        const riskLevelDisplay = document.getElementById('risk-level-display');
+        
+        if (riskScore) riskScore.textContent = riskData.overall_score;
+        if (riskLabel) riskLabel.textContent = riskData.overall_level;
+        
+        if (riskLevelDisplay) {
+            riskLevelDisplay.className = `risk-level risk-${riskData.overall_level.toLowerCase()}`;
+        }
+        
+        // Update category breakdown
+        const riskFactors = document.getElementById('risk-factors');
+        if (riskFactors) {
+            riskData.categories.forEach(category => {
+                const factorElement = riskFactors.querySelector(`[data-factor="${category.name}"]`);
+                if (factorElement) {
+                    const scoreElement = factorElement.querySelector('.score');
+                    if (scoreElement) {
+                        scoreElement.textContent = category.score;
+                    }
+                    factorElement.className = `factor risk-${category.level.toLowerCase()}`;
+                }
+            });
+        }
+    }
+    
+    nextStep() {
+        if (this.validateCurrentStep() && this.currentStep < this.totalSteps) {
+            this.currentStep++;
+            this.updateFormStep();
+        }
+    }
+    
+    prevStep() {
+        if (this.currentStep > 1) {
+            this.currentStep--;
+            this.updateFormStep();
+        }
+    }
+    
+    updateFormStep() {
+        // Hide all steps
+        document.querySelectorAll('.form-step').forEach(step => {
+            step.classList.remove('active');
+        });
+        
+        // Show current step
+        const currentStepElement = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+        if (currentStepElement) {
+            currentStepElement.classList.add('active');
+        }
+        
+        // Update progress indicator
+        const progressSteps = document.querySelectorAll('.progress-indicator .step');
+        progressSteps.forEach((step, index) => {
+            if (index < this.currentStep - 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === this.currentStep - 1) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+        
+        // Update navigation buttons
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        if (prevBtn) {
+            prevBtn.style.display = this.currentStep === 1 ? 'none' : 'inline-flex';
+        }
+        
+        if (nextBtn && submitBtn) {
+            if (this.currentStep === this.totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-flex';
+            } else {
+                nextBtn.style.display = 'inline-flex';
+                submitBtn.style.display = 'none';
+            }
+        }
+    }
+    
+    validateCurrentStep() {
+        const currentStepElement = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+        if (!currentStepElement) return true;
+        
+        const requiredFields = currentStepElement.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+        
+        return isValid;
+    }
+    
+    validateField(field) {
+        const value = field.type === 'checkbox' ? field.checked : field.value.trim();
+        const isValid = field.type === 'checkbox' ? true : value !== '';
+        
+        if (!isValid) {
+            this.showFieldError(field, 'This field is required');
+            return false;
+        }
+        
+        // Additional validation rules
+        if (field.type === 'email' && value && !this.isValidEmail(value)) {
+            this.showFieldError(field, 'Please enter a valid email address');
+            return false;
+        }
+        
+        if (field.type === 'url' && value && !this.isValidUrl(value)) {
+            this.showFieldError(field, 'Please enter a valid URL');
+            return false;
+        }
+        
+        this.clearFieldError(field);
+        return true;
+    }
+    
+    showFieldError(field, message) {
+        this.clearFieldError(field);
+        
+        const errorElement = document.createElement('div');
+        errorElement.className = 'field-error';
+        errorElement.textContent = message;
+        
+        field.classList.add('error');
+        field.parentNode.insertBefore(errorElement, field.nextSibling);
+    }
+    
+    clearFieldError(field) {
+        field.classList.remove('error');
+        const errorElement = field.parentNode.querySelector('.field-error');
+        if (errorElement) {
+            errorElement.remove();
+        }
+    }
+    
+    async submitAssessment(e) {
+        e.preventDefault();
+        
+        if (!this.validateCurrentStep()) {
+            return;
+        }
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const originalText = submitBtn.textContent;
+        
+        try {
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Assessment...';
+            
+            // Collect form data
+            const form = document.getElementById('assessment-form');
+            const formData = new FormData(form);
+            
+            // Convert FormData to JSON
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                if (jsonData[key]) {
+                    if (!Array.isArray(jsonData[key])) {
+                        jsonData[key] = [jsonData[key]];
+                    }
+                    jsonData[key].push(value);
+                } else {
+                    jsonData[key] = value;
+                }
+            });
+
+            // Submit assessment as JSON
+            const response = await fetch('/assess', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Redirect to results
+                window.location.href = `/results/${result.data.assessment_id}`;
+            } else {
+                this.showError('Assessment failed: ' + (result.error || 'Unknown error'));
+            }
+            
+        } catch (error) {
+            console.error('Submission error:', error);
+            this.showError('Failed to submit assessment. Please try again.');
+        } finally {
+            // Restore button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    }
+    
+    async searchPrecedents() {
+        const toolName = document.getElementById('tool_name')?.value || '';
+        const vendor = document.getElementById('vendor')?.value || '';
+        
+        if (!toolName && !vendor) {
+            this.clearPrecedentMatches();
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/search-precedents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tool_name: toolName,
+                    vendor: vendor
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.displayPrecedentMatches(result.matches);
+            }
+            
+        } catch (error) {
+            console.error('Precedent search error:', error);
+        }
+    }
+    
+    displayPrecedentMatches(matches) {
+        const matchesList = document.getElementById('matches-list');
+        if (!matchesList) return;
+        
+        if (matches.length === 0) {
+            matchesList.innerHTML = '<p class="no-matches">No similar tools found in precedent database.</p>';
+            return;
+        }
+        
+        matchesList.innerHTML = matches.map(match => `
+            <div class="precedent-match">
+                <div class="match-header">
+                    <strong>${match.tool_name}</strong> by ${match.vendor}
+                    <span class="similarity-score">${match.similarity}% similar</span>
+                </div>
+                <div class="match-details">
+                    <span class="decision decision-${match.recommendation}">${match.recommendation.replace('_', ' ').toUpperCase()}</span>
+                    <span class="risk-level risk-${match.overall_risk}">${match.overall_risk.toUpperCase()}</span>
+                    <span class="date">${new Date(match.decision_date).toLocaleDateString()}</span>
+                </div>
+                <div class="match-insight">
+                    <i class="fas fa-lightbulb"></i>
+                    ${match.key_difference || 'Similar risk profile and requirements'}
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    clearPrecedentMatches() {
+        const matchesList = document.getElementById('matches-list');
+        if (matchesList) {
+            matchesList.innerHTML = '';
+        }
+    }
+    
+    async loadDashboardData() {
+        try {
+            const response = await fetch('/api/dashboard');
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateDashboardStats(data.stats);
+                this.updateRecentAssessments(data.recent_assessments);
+                this.updateRiskDistribution(data.risk_distribution);
+            }
+            
+        } catch (error) {
+            console.error('Dashboard load error:', error);
+        }
+    }
+    
+    updateDashboardStats(stats) {
+        const statsElements = {
+            'total-assessments': stats.total_assessments,
+            'this-month': stats.this_month,
+            'avg-risk-score': stats.avg_risk_score,
+            'approval-rate': stats.approval_rate
+        };
+        
+        Object.entries(statsElements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        });
+    }
+    
+    updateRecentAssessments(assessments) {
+        const container = document.getElementById('recent-assessments');
+        if (!container) return;
+        
+        container.innerHTML = assessments.map(assessment => `
+            <div class="assessment-card">
+                <div class="assessment-header">
+                    <strong>${assessment.tool_name}</strong>
+                    <span class="vendor">${assessment.vendor}</span>
+                </div>
+                <div class="assessment-meta">
+                    <span class="decision decision-${assessment.recommendation}">
+                        ${assessment.recommendation.replace('_', ' ').toUpperCase()}
+                    </span>
+                    <span class="risk-level risk-${assessment.overall_risk}">
+                        ${assessment.overall_risk.toUpperCase()}
+                    </span>
+                    <span class="date">
+                        ${new Date(assessment.created_at).toLocaleDateString()}
+                    </span>
+                </div>
+                <div class="assessment-actions">
+                    <a href="/results/${assessment.id}" class="btn-link">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    updateRiskDistribution(distribution) {
+        const container = document.getElementById('risk-distribution');
+        if (!container) return;
+        
+        const total = Object.values(distribution).reduce((sum, count) => sum + count, 0);
+        
+        container.innerHTML = Object.entries(distribution).map(([level, count]) => {
+            const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+            return `
+                <div class="distribution-item">
+                    <div class="distribution-bar">
+                        <div class="distribution-fill risk-${level}" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="distribution-label">
+                        <span class="level">${level.toUpperCase()}</span>
+                        <span class="count">${count} (${percentage}%)</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    setupPrecedentSearch() {
+        const searchTerm = document.getElementById('search-term');
+        const categoryFilter = document.getElementById('category-filter');
+        const decisionFilter = document.getElementById('decision-filter');
+        const riskFilter = document.getElementById('risk-filter');
+        const clearFilters = document.getElementById('clear-filters');
+        
+        // Search and filter handlers
+        if (searchTerm) {
+            searchTerm.addEventListener('input', this.debounce(() => this.filterPrecedents(), 300));
+        }
+        
+        [categoryFilter, decisionFilter, riskFilter].forEach(filter => {
+            if (filter) {
+                filter.addEventListener('change', () => this.filterPrecedents());
+            }
+        });
+        
+        if (clearFilters) {
+            clearFilters.addEventListener('click', () => this.clearAllFilters());
+        }
+    }
+    
+    async filterPrecedents() {
+        const filters = {
+            search: document.getElementById('search-term')?.value || '',
+            category: document.getElementById('category-filter')?.value || '',
+            decision: document.getElementById('decision-filter')?.value || '',
+            risk: document.getElementById('risk-filter')?.value || ''
+        };
+        
+        try {
+            const response = await fetch('/api/precedents/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(filters)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.displayPrecedents(result.precedents);
+                this.updateResultsCount(result.total);
+            }
+            
+        } catch (error) {
+            console.error('Precedent filter error:', error);
+        }
+    }
+    
+    displayPrecedents(precedents) {
+        const tableBody = document.getElementById('precedent-table-body');
+        if (!tableBody) return;
+        
+        tableBody.innerHTML = precedents.map(precedent => `
+            <tr>
+                <td>
+                    <div class="tool-info">
+                        <strong>${precedent.tool_name}</strong>
+                        <span class="vendor">${precedent.vendor}</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="category-badge category-${precedent.tool_category}">
+                        ${precedent.tool_category?.replace('_', ' ') || 'Other'}
+                    </span>
+                </td>
+                <td>
+                    <span class="decision decision-${precedent.recommendation}">
+                        ${precedent.recommendation.replace('_', ' ').toUpperCase()}
+                    </span>
+                </td>
+                <td>
+                    <span class="risk-level risk-${precedent.overall_risk}">
+                        ${precedent.overall_risk.toUpperCase()}
+                    </span>
+                </td>
+                <td>${new Date(precedent.decision_date).toLocaleDateString()}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-sm" onclick="app.viewPrecedent('${precedent.assessment_id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-sm" onclick="app.addToComparison('${precedent.assessment_id}')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    clearAllFilters() {
+        document.getElementById('search-term').value = '';
+        document.getElementById('category-filter').value = '';
+        document.getElementById('decision-filter').value = '';
+        document.getElementById('risk-filter').value = '';
+        this.filterPrecedents();
+    }
+    
+    // Utility functions
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    isValidUrl(url) {
+        try {
+            new URL(url);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+    
+    showError(message) {
+        // Create and show error alert
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-error';
+        alert.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            ${message}
+            <button class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+        `;
+        
+        const container = document.querySelector('.main-content');
+        container.insertBefore(alert, container.firstChild);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+    
+    showSuccess(message) {
+        // Create and show success alert
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success';
+        alert.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            ${message}
+            <button class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+        `;
+        
+        const container = document.querySelector('.main-content');
+        container.insertBefore(alert, container.firstChild);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+}
+
+// Initialize app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new AIGovernanceApp();
+});
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AIGovernanceApp;
+}

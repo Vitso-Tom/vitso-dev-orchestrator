@@ -1,0 +1,10 @@
+/* Vitso Dev Orchestrator - App Styles */
+
+/* Any custom styles beyond Tailwind can go here */
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

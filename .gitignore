@@ -1,0 +1,49 @@
+# Environment files
+.env
+.env.local
+.env.production
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Database
+*.db
+*.sql
+*.rdb
+
+# Backups
+backups/
+packages/
+
+# Outputs
+backend/outputs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+vitso_dev_orchestrator.db
+dump.rdb
+.snapshots/
+*Zone.Identifier
+*.log
+nohup.out

@@ -1,0 +1,61 @@
+
+/* Category Score Tooltips */
+.scores-help {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: normal;
+}
+
+.category-row {
+    position: relative;
+}
+
+.tooltip-icon {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-left: 4px;
+    cursor: help;
+    transition: color 0.2s;
+}
+
+.category-row:hover .tooltip-icon {
+    color: #3b82f6;
+}
+
+/* Tooltip popup */
+.category-row::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: 5px;
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    color: #e2e8f0;
+    width: 280px;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    line-height: 1.4;
+}
+
+.category-row:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Print - hide tooltips */
+@media print {
+    .scores-help, .tooltip-icon {
+        display: none !important;
+    }
+    
+    .category-row::after {
+        display: none !important;
+    }
+}

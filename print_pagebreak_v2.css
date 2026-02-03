@@ -1,0 +1,45 @@
+
+/* Print Layout - Centered + Page Breaks */
+@media print {
+    /* Center content on page */
+    body {
+        display: flex !important;
+        justify-content: center !important;
+    }
+    
+    .results-container, .main-content, main, .container {
+        max-width: 7in !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
+    
+    /* === PAGE BREAK CONTROLS === */
+    
+    /* Page 1: Assessment Summary + Risk Analysis */
+    /* Page 2: Assessment Context */
+    /* Page 3: Certifications + Reconciliation */
+    /* Page 4+: Research Report */
+    
+    /* Add page-break class markers via CSS */
+    .context-card {
+        page-break-before: always !important;
+    }
+    
+    .results-card:has(.certs-grid),
+    .card:has(.certs-grid) {
+        page-break-before: always !important;
+    }
+    
+    .research-section {
+        page-break-before: always !important;
+    }
+    
+    /* Keep certifications and reconciliation together */
+    .results-card:has(.certs-grid),
+    .card:has(.certs-grid),
+    .card:has(.reconciliation-table),
+    .results-card:has(.reconciliation-table) {
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+    }
+}

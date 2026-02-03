@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tool Risk Assessment - Healthcare SaaS</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/reports.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Tool Onboarding Simulator</h1>
+            <p class="subtitle">Technology & Security Operations Risk Assessment</p>
+        </header>
+
+        <form id="evaluationForm" action="/evaluate" method="POST" class="evaluation-form">
+            <div class="form-grid">
+                <!-- Basic Tool Information -->
+                <div class="form-section">
+                    <h2>Tool Information</h2>
+                    <div class="form-group">
+                        <label for="tool_name">Tool Name <span class="required">*</span></label>
+                        <input type="text" id="tool_name" name="tool_name" required placeholder="e.g., GitHub Copilot">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vendor">Vendor <span class="required">*</span></label>
+                        <input type="text" id="vendor" name="vendor" required placeholder="e.g., Microsoft">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="intended_users">Intended Users <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="intended_users" value="developers"> Developers</label>
+                            <label><input type="checkbox" name="intended_users" value="data_scientists"> Data Scientists</label>
+                            <label><input type="checkbox" name="intended_users" value="operators"> Operations Staff</label>
+                            <label><input type="checkbox" name="intended_users" value="analysts"> Business Analysts</label>
+                            <label><input type="checkbox" name="intended_users" value="non_technical"> Non-Technical Staff</label>
+                            <label><input type="checkbox" name="intended_users" value="admins"> System Administrators</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="use_cases">Primary Use Cases <span class="required">*</span></label>
+                        <textarea id="use_cases" name="use_cases" rows="3" required placeholder="Describe the main ways this tool will be used..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Data & Security Information -->
+                <div class="form-section">
+                    <h2>Data & Security Profile</h2>
+                    <div class="form-group">
+                        <label for="data_types">Data Types Accessed <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="data_types" value="phi"> PHI (Protected Health Information)</label>
+                            <label><input type="checkbox" name="data_types" value="pii"> PII (Personally Identifiable Information)</label>
+                            <label><input type="checkbox" name="data_types" value="source_code"> Source Code</label>
+                            <label><input type="checkbox" name="data_types" value="logs"> System Logs</label>
+                            <label><input type="checkbox" name="data_types" value="metadata"> Metadata</label>
+                            <label><input type="checkbox" name="data_types" value="prompts"> User Prompts</label>
+                            <label><input type="checkbox" name="data_types" value="financial"> Financial Data</label>
+                            <label><input type="checkbox" name="data_types" value="public"> Public Data Only</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_sensitivity">Highest Data Sensitivity Level <span class="required">*</span></label>
+                        <select id="data_sensitivity" name="data_sensitivity" required>
+                            <option value="">Select sensitivity level</option>
+                            <option value="phi">PHI - Protected Health Information</option>
+                            <option value="pii">PII - Personally Identifiable Information</option>
+                            <option value="confidential">Confidential Business Data</option>
+                            <option value="internal">Internal Use Only</option>
+                            <option value="public">Public Information</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auth_model">Authentication Model</label>
+                        <select id="auth_model" name="auth_model">
+                            <option value="">Select authentication method</option>
+                            <option value="sso">Single Sign-On (SSO)</option>
+                            <option value="oauth">OAuth Integration</option>
+                            <option value="saml">SAML</option>
+                            <option value="api_key">API Key</option>
+                            <option value="username_password">Username/Password</option>
+                            <option value="unknown">Unknown/Not Specified</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authz_model">Authorization Model</label>
+                        <select id="authz_model" name="authz_model">
+                            <option value="">Select authorization model</option>
+                            <option value="rbac">Role-Based Access Control</option>
+                            <option value="abac">Attribute-Based Access Control</option>
+                            <option value="basic">Basic User/Admin Roles</option>
+                            <option value="none">No Granular Authorization</option>
+                            <option value="unknown">Unknown/Not Specified</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Technical Architecture -->
+                <div class="form-section">
+                    <h2>Technical Architecture</h2>
+                    <div class="form-group">
+                        <label for="deployment_model">Deployment Model <span class="required">*</span></label>
+                        <select id="deployment_model" name="deployment_model" required>
+                            <option value="">Select deployment model</option>
+                            <option value="saas">SaaS (Software as a Service)</option>
+                            <option value="hybrid">Hybrid (Partial On-Premise)</option>
+                            <option value="self_hosted">Self-Hosted in Our Cloud</option>
+                            <option value="on_premise">Fully On-Premise</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_storage">Data Storage Behavior</label>
+                        <select id="data_storage" name="data_storage">
+                            <option value="">Select storage behavior</option>
+                            <option value="persistent">Data Stored Persistently</option>
+                            <option value="temporary">Temporary Storage Only</option>
+                            <option value="processing_only">Processing Only (No Storage)</option>
+                            <option value="cached">Cached for Performance</option>
+                            <option value="unknown">Unknown/Not Specified</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_retention">Data Retention Policy</label>
+                        <select id="data_retention" name="data_retention">
+                            <option value="">Select retention policy</option>
+                            <option value="indefinite">Indefinite Retention</option>
+                            <option value="90_days">90 Days</option>
+                            <option value="30_days">30 Days</option>
+                            <option value="7_days">7 Days</option>
+                            <option value="session_only">Session Only</option>
+                            <option value="no_retention">No Data Retention</option>
+                            <option value="unknown">Unknown/Not Specified</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model_interactions">AI Model Interaction Patterns</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="model_interactions" value="prompting"> Direct Prompting</label>
+                            <label><input type="checkbox" name="model_interactions" value="embeddings"> Embeddings/Vector Search</label>
+                            <label><input type="checkbox" name="model_interactions" value="agents"> AI Agents</label>
+                            <label><input type="checkbox" name="model_interactions" value="plugins"> Plugins/Extensions</label>
+                            <label><input type="checkbox" name="model_interactions" value="mcps"> Model Context Protocols</label>
+                            <label><input type="checkbox" name="model_interactions" value="fine_tuning"> Fine-tuning</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="integration_points">Integration Points</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="integration_points" value="idp"> Identity Provider (IDP)</label>
+                            <label><input type="checkbox" name="integration_points" value="ide"> IDEs/Development Tools</label>
+                            <label><input type="checkbox" name="integration_points" value="ci_cd"> CI/CD Pipelines</label>
+                            <label><input type="checkbox" name="integration_points" value="data_platforms"> Data Platforms</label>
+                            <label><input type="checkbox" name="integration_points" value="api_gateway"> API Gateway</label>
+                            <label><input type="checkbox" name="integration_points" value="monitoring"> Monitoring Systems</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Context -->
+                <div class="form-section">
+                    <h2>Business Context</h2>
+                    <div class="form-group">
+                        <label for="timeline_pressure">Timeline Pressure</label>
+                        <select id="timeline_pressure" name="timeline_pressure">
+                            <option value="">Select timeline urgency</option>
+                            <option value="immediate">Immediate (< 1 week)</option>
+                            <option value="urgent">Urgent (1-4 weeks)</option>
+                            <option value="normal">Normal (1-3 months)</option>
+                            <option value="flexible">Flexible (> 3 months)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="executive_pressure">Executive Expectations</label>
+                        <textarea id="executive_pressure" name="executive_pressure" rows="2" placeholder="Describe any specific executive directives or expectations..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="previewRisk" class="btn btn-secondary">Preview Risk</button>
+                <button type="submit" class="btn btn-primary">Generate Full Assessment</button>
+            </div>
+        </form>
+
+        <!-- Risk Preview Panel -->
+        <div id="riskPreview" class="risk-preview hidden">
+            <h3>Preliminary Risk Assessment</h3>
+            <div class="risk-indicators">
+                <div class="risk-indicator">
+                    <span class="risk-label">Data Sensitivity:</span>
+                    <span id="dataSensitivityRisk" class="risk-level"></span>
+                </div>
+                <div class="risk-indicator">
+                    <span class="risk-label">Access Scope:</span>
+                    <span id="accessScopeRisk" class="risk-level"></span>
+                </div>
+                <div class="risk-indicator">
+                    <span class="risk-label">Deployment Risk:</span>
+                    <span id="deploymentRisk" class="risk-level"></span>
+                </div>
+                <div class="risk-indicator">
+                    <span class="risk-label">Overall Risk:</span>
+                    <span id="overallRisk" class="risk-level overall"></span>
+                </div>
+            </div>
+            <div id="preliminaryRecommendation" class="recommendation"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/risk_calculator.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

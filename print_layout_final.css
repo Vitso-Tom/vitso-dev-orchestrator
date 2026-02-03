@@ -1,0 +1,50 @@
+
+/* Print Layout - Centered + Explicit Page Breaks */
+@media print {
+    /* Center content on page */
+    html, body {
+        display: block !important;
+    }
+    
+    .results-container, .main-content, main, .container, .content-wrapper {
+        max-width: 6.5in !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
+    
+    .card, .results-card, .context-card {
+        max-width: 6.5in !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    /* === EXPLICIT PAGE BREAKS === */
+    
+    /* Assessment Context starts on new page */
+    .context-card {
+        page-break-before: always !important;
+        margin-top: 0 !important;
+    }
+    
+    /* Certifications starts on new page */
+    .print-page-break {
+        page-break-before: always !important;
+        margin-top: 0 !important;
+    }
+    
+    /* Research Report starts on new page */
+    .research-section {
+        page-break-before: always !important;
+        margin-top: 0 !important;
+    }
+    
+    /* Keep content together within sections */
+    .card, .results-card {
+        page-break-inside: avoid !important;
+    }
+    
+    /* Don't break after headings */
+    h1, h2, h3, h4, .card-header {
+        page-break-after: avoid !important;
+    }
+}

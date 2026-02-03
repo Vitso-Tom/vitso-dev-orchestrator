@@ -1,0 +1,451 @@
+
+/* Dark Theme Print Styles */
+@media print {
+    /* Page setup */
+    @page {
+        size: letter;
+        margin: 0.5in 0.5in 0.6in 0.5in;
+    }
+    
+    /* Dark background base */
+    html, body {
+        background: #0f172a !important;
+        color: #e2e8f0 !important;
+        font-family: "Segoe UI", "Arial", sans-serif !important;
+        font-size: 10pt !important;
+        line-height: 1.4 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Force color printing */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Hide UI elements */
+    nav, header, footer, .sidebar, .btn, button, 
+    .nav-links, .risk-preview, .similar-tools,
+    .no-print, .navbar, .top-bar, .action-buttons {
+        display: none !important;
+    }
+    
+    /* Main container */
+    .results-container, .main-content, main, .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #0f172a !important;
+    }
+    
+    /* === CARDS === */
+    .card, .results-card, .context-card {
+        background: #1e293b !important;
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+        margin: 0 0 12pt 0 !important;
+        padding: 0 !important;
+        page-break-inside: avoid !important;
+    }
+    
+    .card-header {
+        background: #1e293b !important;
+        border-bottom: 1px solid #334155 !important;
+        padding: 8pt 12pt !important;
+        margin: 0 !important;
+    }
+    
+    .card-header h3 {
+        color: #f1f5f9 !important;
+        font-size: 12pt !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+    }
+    
+    .card-body {
+        padding: 12pt !important;
+        background: #1e293b !important;
+    }
+    
+    /* === SUMMARY GRID === */
+    .summary-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10pt !important;
+    }
+    
+    .summary-item .label {
+        font-size: 7pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5pt !important;
+        color: #94a3b8 !important;
+    }
+    
+    .summary-item .value {
+        font-size: 11pt !important;
+        font-weight: 600 !important;
+        color: #f1f5f9 !important;
+    }
+    
+    /* === RISK SCORE === */
+    .risk-score-display {
+        text-align: center !important;
+        margin: 12pt 0 !important;
+    }
+    
+    .score-circle {
+        display: inline-flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 70pt !important;
+        height: 70pt !important;
+        border: 4px solid !important;
+        border-radius: 50% !important;
+        background: #0f172a !important;
+    }
+    
+    .score-circle.critical { border-color: #ef4444 !important; }
+    .score-circle.high { border-color: #f97316 !important; }
+    .score-circle.moderate { border-color: #eab308 !important; }
+    .score-circle.low { border-color: #22c55e !important; }
+    
+    .score-circle .score {
+        font-size: 24pt !important;
+        font-weight: bold !important;
+        color: #f1f5f9 !important;
+        line-height: 1 !important;
+    }
+    
+    .score-circle .label {
+        font-size: 7pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1pt !important;
+        color: #94a3b8 !important;
+        margin-top: 2pt !important;
+    }
+    
+    /* === RECOMMENDATION === */
+    .recommendation-box {
+        background: #0f172a !important;
+        border: 2px solid #334155 !important;
+        border-radius: 6px !important;
+        padding: 10pt !important;
+        margin: 10pt 0 !important;
+    }
+    
+    .recommendation-box h4 {
+        font-size: 8pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1pt !important;
+        color: #94a3b8 !important;
+        margin: 0 0 6pt 0 !important;
+    }
+    
+    .recommendation-badge {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        color: #f1f5f9 !important;
+    }
+    
+    .recommendation-box.disqualified_no_go {
+        border-color: #ef4444 !important;
+        background: rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    .recommendation-box.conditional_no_go {
+        border-color: #f97316 !important;
+        background: rgba(249, 115, 22, 0.1) !important;
+    }
+    
+    .recommendation-box.unqualified_go,
+    .recommendation-box.go {
+        border-color: #22c55e !important;
+        background: rgba(34, 197, 94, 0.1) !important;
+    }
+    
+    /* === DISQUALIFIERS/CONDITIONS === */
+    .disqualifiers-box {
+        background: rgba(239, 68, 68, 0.15) !important;
+        border: 1px solid #ef4444 !important;
+        border-radius: 6px !important;
+        padding: 10pt !important;
+        margin: 8pt 0 !important;
+    }
+    
+    .disqualifiers-box h5 {
+        color: #fca5a5 !important;
+        font-size: 10pt !important;
+        margin: 0 0 6pt 0 !important;
+    }
+    
+    .disqualifiers-box ul, .disqualifiers-box li {
+        color: #fecaca !important;
+    }
+    
+    .conditions-box {
+        background: rgba(245, 158, 11, 0.15) !important;
+        border: 1px solid #f59e0b !important;
+        border-radius: 6px !important;
+        padding: 10pt !important;
+        margin: 8pt 0 !important;
+    }
+    
+    /* === CATEGORY SCORES === */
+    .category-scores {
+        margin: 10pt 0 !important;
+    }
+    
+    .score-row {
+        display: flex !important;
+        align-items: center !important;
+        margin: 5pt 0 !important;
+    }
+    
+    .category-label {
+        width: 100pt !important;
+        font-size: 9pt !important;
+        color: #e2e8f0 !important;
+    }
+    
+    .score-bar-container {
+        flex: 1 !important;
+        margin: 0 8pt !important;
+    }
+    
+    .score-bar-bg {
+        height: 8pt !important;
+        background: #334155 !important;
+        border-radius: 4pt !important;
+    }
+    
+    .score-bar-fill {
+        height: 100% !important;
+        border-radius: 4pt !important;
+    }
+    
+    .score-bar-fill.low { background: #22c55e !important; }
+    .score-bar-fill.moderate { background: #eab308 !important; }
+    .score-bar-fill.high { background: #f97316 !important; }
+    .score-bar-fill.critical { background: #ef4444 !important; }
+    
+    .category-score {
+        width: 25pt !important;
+        text-align: right !important;
+        font-size: 9pt !important;
+        font-weight: bold !important;
+        color: #f1f5f9 !important;
+    }
+    
+    /* === CONTEXT CARD === */
+    .context-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10pt !important;
+    }
+    
+    .context-item .label {
+        font-size: 7pt !important;
+        text-transform: uppercase !important;
+        color: #94a3b8 !important;
+    }
+    
+    .context-item .value {
+        font-size: 9pt !important;
+        color: #e2e8f0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    .context-item.full-width {
+        grid-column: 1 / -1 !important;
+    }
+    
+    .context-item.full-width .value {
+        background: rgba(30, 41, 59, 0.5) !important;
+        padding: 8pt !important;
+        border-radius: 4pt !important;
+    }
+    
+    .context-item.concerns {
+        background: rgba(245, 158, 11, 0.1) !important;
+        border: 1px solid rgba(245, 158, 11, 0.4) !important;
+        border-radius: 6px !important;
+        padding: 10pt !important;
+    }
+    
+    .context-item.concerns .label {
+        color: #f59e0b !important;
+    }
+    
+    .context-item.concerns .value {
+        color: #fcd34d !important;
+        background: transparent !important;
+    }
+    
+    /* === CERTIFICATIONS === */
+    .certs-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10pt !important;
+    }
+    
+    .cert-category {
+        page-break-inside: avoid !important;
+    }
+    
+    .cert-category h4 {
+        font-size: 9pt !important;
+        font-weight: 600 !important;
+        color: #94a3b8 !important;
+        text-transform: uppercase !important;
+        margin: 0 0 5pt 0 !important;
+    }
+    
+    .cert-badge {
+        display: inline-block !important;
+        background: rgba(30, 41, 59, 0.8) !important;
+        border: 1px solid #475569 !important;
+        border-radius: 4px !important;
+        padding: 2pt 6pt !important;
+        margin: 2pt 3pt 2pt 0 !important;
+        font-size: 8pt !important;
+        color: #e2e8f0 !important;
+    }
+    
+    .cert-legend {
+        font-size: 7pt !important;
+        color: #94a3b8 !important;
+        margin-bottom: 8pt !important;
+    }
+    
+    /* === RECONCILIATION TABLE === */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 8pt !important;
+        margin: 8pt 0 !important;
+        background: #1e293b !important;
+    }
+    
+    th {
+        background: #334155 !important;
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        font-size: 7pt !important;
+        letter-spacing: 0.5pt !important;
+        padding: 6pt 8pt !important;
+        border: 1px solid #475569 !important;
+        text-align: left !important;
+    }
+    
+    td {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        padding: 5pt 8pt !important;
+        border: 1px solid #334155 !important;
+    }
+    
+    .status-badge {
+        display: inline-block !important;
+        padding: 1pt 5pt !important;
+        border-radius: 3pt !important;
+        font-size: 7pt !important;
+        font-weight: 600 !important;
+    }
+    
+    /* === RESEARCH REPORT === */
+    .research-section {
+        page-break-before: always !important;
+    }
+    
+    .research-meta {
+        display: none !important;
+    }
+    
+    .research-badge {
+        display: none !important;
+    }
+    
+    .research-report, .markdown-body {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+    }
+    
+    .research-report h1, .markdown-body h1 {
+        font-size: 14pt !important;
+        color: #f1f5f9 !important;
+        border-bottom: 2px solid #3b82f6 !important;
+        padding-bottom: 4pt !important;
+        margin: 12pt 0 8pt 0 !important;
+        page-break-after: avoid !important;
+    }
+    
+    .research-report h2, .markdown-body h2 {
+        font-size: 12pt !important;
+        color: #f1f5f9 !important;
+        border-bottom: 1px solid #475569 !important;
+        padding-bottom: 3pt !important;
+        margin: 10pt 0 6pt 0 !important;
+        page-break-after: avoid !important;
+    }
+    
+    .research-report h3, .markdown-body h3 {
+        font-size: 10pt !important;
+        color: #e2e8f0 !important;
+        margin: 8pt 0 4pt 0 !important;
+        page-break-after: avoid !important;
+    }
+    
+    .research-report h4, .markdown-body h4 {
+        font-size: 9pt !important;
+        color: #cbd5e1 !important;
+        margin: 6pt 0 3pt 0 !important;
+    }
+    
+    .research-report p, .markdown-body p {
+        margin: 4pt 0 !important;
+        color: #e2e8f0 !important;
+    }
+    
+    .research-report ul, .research-report ol,
+    .markdown-body ul, .markdown-body ol {
+        margin: 4pt 0 4pt 15pt !important;
+        padding: 0 !important;
+        color: #e2e8f0 !important;
+    }
+    
+    .research-report li, .markdown-body li {
+        margin: 2pt 0 !important;
+        color: #e2e8f0 !important;
+    }
+    
+    .research-report strong, .markdown-body strong {
+        color: #f1f5f9 !important;
+    }
+    
+    /* Emoji/checkmarks */
+    .research-report, .markdown-body {
+        font-family: "Segoe UI", "Apple Color Emoji", "Noto Color Emoji", sans-serif !important;
+    }
+    
+    /* === PAGE BREAKS === */
+    h1, h2, h3 {
+        page-break-after: avoid !important;
+    }
+    
+    .card, table, .cert-category {
+        page-break-inside: avoid !important;
+    }
+    
+    /* Orphan/widow control */
+    p, li {
+        orphans: 2;
+        widows: 2;
+    }
+}

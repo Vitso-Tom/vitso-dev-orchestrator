@@ -1,0 +1,19 @@
+
+/* Ensure full page prints from top */
+@media print {
+    html, body {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .results-container, .main-content, main {
+        position: static !important;
+        overflow: visible !important;
+        height: auto !important;
+    }
+    
+    /* Force all content visible */
+    * {
+        overflow: visible !important;
+    }
+}

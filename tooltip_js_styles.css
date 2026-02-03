@@ -1,0 +1,52 @@
+
+/* Category Tooltip Styles (JavaScript version) */
+.category-row {
+    position: relative;
+}
+
+.tooltip-icon {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-left: 6px;
+    cursor: help;
+    transition: color 0.2s;
+}
+
+.category-row:hover .tooltip-icon {
+    color: #3b82f6;
+}
+
+.category-tooltip {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: 8px;
+    background: #0f172a;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #e2e8f0;
+    width: 320px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    line-height: 1.5;
+    font-weight: normal;
+}
+
+.scores-help {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Print - hide tooltips */
+@media print {
+    .scores-help, .tooltip-icon, .category-tooltip {
+        display: none !important;
+    }
+}

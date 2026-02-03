@@ -1,0 +1,154 @@
+
+/* Updated Context Card Styles */
+.context-inline {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #334155;
+}
+
+.context-inline-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.context-inline-item .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.context-inline-item .value {
+    color: #f1f5f9;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.context-section {
+    margin-bottom: 15px;
+}
+
+.context-section .section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.context-section .section-content {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 6px;
+    padding: 12px 15px;
+    color: #e2e8f0;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.use-cases-content {
+    padding-left: 20px !important;
+}
+
+.use-cases-content strong {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    color: #f1f5f9;
+}
+
+.use-cases-content strong:first-child {
+    margin-top: 0;
+}
+
+.concerns-section {
+    margin-top: 15px;
+}
+
+.concerns-section .section-label {
+    color: #f59e0b;
+}
+
+.concerns-section .section-content {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fcd34d;
+}
+
+/* Print-specific context styles */
+@media print {
+    .context-inline {
+        display: flex !important;
+        gap: 40pt !important;
+        margin-bottom: 10pt !important;
+        padding-bottom: 8pt !important;
+        border-bottom: 1px solid #475569 !important;
+    }
+    
+    .context-inline-item {
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 6pt !important;
+    }
+    
+    .context-inline-item .label {
+        font-size: 8pt !important;
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+    }
+    
+    .context-inline-item .value {
+        font-size: 10pt !important;
+        color: #f1f5f9 !important;
+        font-weight: 500 !important;
+    }
+    
+    .context-section {
+        margin-bottom: 10pt !important;
+    }
+    
+    .context-section .section-label {
+        font-size: 8pt !important;
+        color: #94a3b8 !important;
+        margin-bottom: 5pt !important;
+    }
+    
+    .context-section .section-content {
+        background: rgba(30, 41, 59, 0.5) !important;
+        padding: 8pt 12pt !important;
+        padding-left: 20pt !important;
+        font-size: 9pt !important;
+        line-height: 1.5 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        color: #e2e8f0 !important;
+    }
+    
+    .use-cases-content strong {
+        display: block !important;
+        margin-top: 8pt !important;
+        margin-bottom: 2pt !important;
+        color: #f1f5f9 !important;
+    }
+    
+    .use-cases-content strong:first-child {
+        margin-top: 0 !important;
+    }
+    
+    .concerns-section .section-label {
+        color: #f59e0b !important;
+    }
+    
+    .concerns-section .section-content {
+        background: rgba(245, 158, 11, 0.15) !important;
+        border: 1px solid rgba(245, 158, 11, 0.4) !important;
+        color: #fcd34d !important;
+    }
+}

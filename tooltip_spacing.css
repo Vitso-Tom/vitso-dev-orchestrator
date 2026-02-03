@@ -1,0 +1,5 @@
+
+/* Tooltip icon spacing - final override */
+.category-name .tooltip-icon {
+    margin-right: 10px !important;
+}

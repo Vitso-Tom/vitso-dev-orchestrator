@@ -1,0 +1,19 @@
+
+/* Gradient score circle - blends color based on score */
+.score-circle {
+    border-width: 4px !important;
+    border-style: solid !important;
+}
+
+/* Override the solid colors with gradients based on score */
+.score-circle.low {
+    border-color: #10b981 !important; /* Default green for truly low */
+}
+
+.score-circle.moderate {
+    border-color: #f59e0b !important; /* Yellow/orange for moderate */
+}
+
+.score-circle.high {
+    border-color: #ef4444 !important; /* Red for high */
+}

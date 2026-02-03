@@ -1,0 +1,238 @@
+/* Forms and Layout Fixes - Dark Theme */
+
+body {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+
+.header {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.header-content h1 { color: #f1f5f9 !important; }
+
+.assessment-container {
+  display: grid !important;
+  grid-template-columns: 300px 1fr !important;
+  gap: 1.5rem !important;
+  align-items: start !important;
+}
+
+.risk-preview {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+  position: sticky !important;
+  top: 1rem !important;
+}
+
+.risk-preview h3 {
+  color: #f1f5f9 !important;
+  padding: 1rem !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.risk-factors {
+  padding: 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+}
+
+.factor {
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 0.75rem !important;
+  background: #0f172a !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #334155 !important;
+}
+
+.factor span:first-child { color: #cbd5e1 !important; }
+
+.assessment-form {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+  padding: 1.5rem !important;
+}
+
+.progress-indicator {
+  display: flex !important;
+  gap: 0.5rem !important;
+  padding: 1rem !important;
+  background: #0f172a !important;
+  border-radius: 0.5rem !important;
+  margin-bottom: 1.5rem !important;
+  overflow-x: auto !important;
+}
+
+.progress-indicator .step {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+.progress-indicator .step.active { background: #3b82f6 !important; }
+
+.progress-indicator .step-number {
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #334155 !important;
+  color: #94a3b8 !important;
+  border-radius: 50% !important;
+  font-size: 0.75rem !important;
+}
+
+.progress-indicator .step.active .step-number {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+.progress-indicator .step-label { color: #94a3b8 !important; font-size: 0.8125rem !important; }
+.progress-indicator .step.active .step-label { color: #ffffff !important; }
+
+.form-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 1rem !important;
+}
+
+.form-group.full-width { grid-column: 1 / -1 !important; }
+.form-group label { color: #cbd5e1 !important; font-size: 0.8125rem !important; margin-bottom: 0.5rem !important; display: block !important; }
+
+input, select, textarea {
+  width: 100% !important;
+  padding: 0.75rem !important;
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.375rem !important;
+  color: #f1f5f9 !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+}
+
+.checkbox-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+}
+
+.checkbox-group label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 0.75rem !important;
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+}
+
+.checkbox-group label:has(input:checked) {
+  background: #1e3a5f !important;
+  border-color: #3b82f6 !important;
+}
+
+.btn-primary {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+}
+
+.btn-primary:hover { background: #2563eb !important; }
+
+.risk-level.low .risk-score { color: #10b981 !important; }
+.risk-level.moderate .risk-score { color: #f59e0b !important; }
+.risk-level.high .risk-score { color: #ef4444 !important; }
+/* Additional fixes for forms.css */
+
+/* Radio button alignment */
+.radio-group {
+  display: flex !important;
+  gap: 1.5rem !important;
+  align-items: center !important;
+}
+
+.radio-group label,
+.form-group > div > label:has(input[type="radio"]) {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  cursor: pointer !important;
+  color: #cbd5e1 !important;
+  font-size: 0.875rem !important;
+}
+
+input[type="radio"] {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+  accent-color: #3b82f6 !important;
+  cursor: pointer !important;
+}
+
+/* Fix inline radio groups */
+.form-group div:has(> label > input[type="radio"]) {
+  display: flex !important;
+  gap: 1.5rem !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+
+/* Ensure form steps show/hide properly */
+.form-step {
+  display: none !important;
+}
+
+.form-step.active {
+  display: block !important;
+}
+
+/* Button fixes */
+.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-success {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+}
+
+.btn-success:hover {
+  background: #059669 !important;
+}
+
+.btn-secondary {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+}
+
+.btn-secondary:hover {
+  background: #475569 !important;
+}

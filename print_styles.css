@@ -1,0 +1,221 @@
+
+/* Print Styles */
+@media print {
+    /* Reset to white background, dark text */
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 11pt;
+        line-height: 1.4;
+    }
+    
+    /* Hide navigation, buttons, sidebar */
+    nav, .sidebar, .btn, button, .nav-links, .risk-preview,
+    .similar-tools, footer, .no-print {
+        display: none !important;
+    }
+    
+    /* Reset card backgrounds */
+    .card, .results-card, .context-card, .card-body, .card-header {
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        color: black !important;
+        page-break-inside: avoid;
+        margin-bottom: 15pt;
+    }
+    
+    .card-header {
+        border-bottom: 2px solid #333 !important;
+        padding: 8pt !important;
+    }
+    
+    .card-header h3 {
+        color: black !important;
+        font-size: 14pt;
+        margin: 0;
+    }
+    
+    .card-body {
+        padding: 12pt !important;
+    }
+    
+    /* Risk score circle */
+    .score-circle {
+        border: 3px solid #333 !important;
+        background: white !important;
+        color: black !important;
+        width: 80pt !important;
+        height: 80pt !important;
+    }
+    
+    .score-circle .score {
+        color: black !important;
+        font-size: 24pt !important;
+    }
+    
+    .score-circle .label {
+        color: #333 !important;
+        font-size: 10pt !important;
+    }
+    
+    /* Risk level colors for print */
+    .score-circle.critical { border-color: #dc2626 !important; }
+    .score-circle.high { border-color: #f97316 !important; }
+    .score-circle.moderate { border-color: #eab308 !important; }
+    .score-circle.low { border-color: #22c55e !important; }
+    
+    /* Recommendation badge */
+    .recommendation-badge {
+        background: #f3f4f6 !important;
+        color: black !important;
+        border: 1px solid #333 !important;
+        padding: 4pt 8pt !important;
+    }
+    
+    /* Disqualifiers/Conditions boxes */
+    .disqualifiers-box, .conditions-box {
+        background: #fef2f2 !important;
+        border: 1px solid #dc2626 !important;
+        color: black !important;
+        padding: 8pt !important;
+    }
+    
+    .conditions-box {
+        background: #fffbeb !important;
+        border-color: #f59e0b !important;
+    }
+    
+    /* Category scores */
+    .category-scores {
+        page-break-inside: avoid;
+    }
+    
+    .score-bar-bg {
+        background: #e5e7eb !important;
+        height: 12pt !important;
+    }
+    
+    .score-bar-fill {
+        height: 12pt !important;
+    }
+    
+    .category-label, .category-score {
+        color: black !important;
+        font-size: 10pt;
+    }
+    
+    /* Certifications */
+    .cert-badge {
+        background: #f3f4f6 !important;
+        border: 1px solid #666 !important;
+        color: black !important;
+        padding: 2pt 6pt !important;
+        font-size: 9pt;
+    }
+    
+    .certs-grid {
+        display: block !important;
+    }
+    
+    .cert-category {
+        margin-bottom: 10pt;
+        page-break-inside: avoid;
+    }
+    
+    .cert-category h4 {
+        color: black !important;
+        font-size: 11pt;
+        margin-bottom: 4pt;
+    }
+    
+    /* Reconciliation table */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 9pt;
+    }
+    
+    th, td {
+        border: 1px solid #ccc !important;
+        padding: 4pt 6pt !important;
+        color: black !important;
+        background: white !important;
+        text-align: left;
+    }
+    
+    th {
+        background: #f3f4f6 !important;
+        font-weight: bold;
+    }
+    
+    .status-badge {
+        padding: 2pt 4pt !important;
+        font-size: 8pt;
+        border: 1px solid #666 !important;
+    }
+    
+    /* Assessment Context */
+    .context-card .context-item .label {
+        color: #666 !important;
+        font-size: 9pt;
+    }
+    
+    .context-card .context-item .value {
+        color: black !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    .context-item.concerns {
+        background: #fffbeb !important;
+        border: 1px solid #f59e0b !important;
+    }
+    
+    .context-item.concerns .label,
+    .context-item.concerns .value {
+        color: #92400e !important;
+    }
+    
+    /* Research report */
+    .research-report {
+        background: white !important;
+        color: black !important;
+        font-size: 10pt;
+    }
+    
+    .research-report h1, .research-report h2, 
+    .research-report h3, .research-report h4 {
+        color: black !important;
+        page-break-after: avoid;
+    }
+    
+    .research-report ul, .research-report ol {
+        color: black !important;
+    }
+    
+    /* Page breaks */
+    .page-break-before {
+        page-break-before: always;
+    }
+    
+    h2, h3 {
+        page-break-after: avoid;
+    }
+    
+    /* Summary grid */
+    .summary-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .summary-item .label {
+        color: #666 !important;
+        font-size: 9pt;
+    }
+    
+    .summary-item .value {
+        color: black !important;
+        font-size: 11pt;
+    }
+}

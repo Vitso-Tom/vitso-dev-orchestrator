@@ -1,0 +1,44 @@
+
+/* Force print from top of page */
+@media print {
+    html {
+        scroll-behavior: auto !important;
+    }
+    
+    body {
+        position: static !important;
+        overflow: visible !important;
+        height: auto !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .results-container, .main-content, main, 
+    .container, .content-wrapper, .page-content {
+        position: static !important;
+        overflow: visible !important;
+        height: auto !important;
+        transform: none !important;
+        margin: 0 !important;
+    }
+    
+    /* Remove any fixed/sticky positioning */
+    * {
+        position: static !important;
+        float: none !important;
+    }
+    
+    /* Exception for flex items */
+    .score-row, .context-inline, .summary-grid, 
+    .certs-grid, .context-inline-item {
+        position: relative !important;
+    }
+    
+    /* Ensure visible */
+    .card, .results-card {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}

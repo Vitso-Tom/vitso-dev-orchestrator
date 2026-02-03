@@ -1,0 +1,6 @@
+
+/* Category name width override */
+.category-name {
+    width: 200px !important;
+    min-width: 200px !important;
+}

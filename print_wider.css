@@ -1,0 +1,70 @@
+
+/* Print Layout - Wider Content */
+@media print {
+    /* Narrower page margins */
+    @page {
+        size: letter;
+        margin: 0.4in 0.4in 0.5in 0.4in;
+    }
+    
+    /* Wider content area - use full available width */
+    html, body {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .results-container, .main-content, main, .container, .content-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .card, .results-card, .context-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    /* Summary grid - use full width */
+    .summary-grid {
+        width: 100% !important;
+    }
+    
+    /* Category scores - wider bars */
+    .category-label {
+        width: 110pt !important;
+    }
+    
+    .score-bar-container {
+        flex: 1 !important;
+    }
+    
+    /* Certifications grid - 3 columns full width */
+    .certs-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 15pt !important;
+        width: 100% !important;
+    }
+    
+    /* Table full width */
+    table {
+        width: 100% !important;
+    }
+    
+    /* Context sections full width */
+    .context-inline {
+        width: 100% !important;
+    }
+    
+    .context-section .section-content {
+        width: 100% !important;
+    }
+    
+    /* Research report full width */
+    .research-report, .markdown-body {
+        width: 100% !important;
+    }
+}

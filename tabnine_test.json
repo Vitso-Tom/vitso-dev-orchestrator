@@ -1,0 +1,171 @@
+{
+    "success": true,
+    "vendor_name": "Tabnine",
+    "product_name": "Tabnine",
+    "research_timestamp": "2026-01-02T02:00:43.888300",
+    "synthesized_report": "# Vendor Security Research Report: Tabnine\n\n**Report Date:** January 02, 2026  \n**Vendor:** Tabnine  \n**Report Type:** Security Assessment for Enterprise Procurement\n\n## 1. Company Overview\n\nTabnine is an AI-powered code completion platform that provides intelligent code suggestions to developers through IDE integrations. The company offers both individual and enterprise solutions, positioning itself as a productivity tool for software development teams.\n\n## 2. Funding & Stability\n\nTabnine has secured funding from notable investors including Sequoia Capital and Andreessen Horowitz [1]. However, the company's current valuation remains undisclosed, which may limit transparency regarding financial stability for enterprise procurement decisions.\n\n**Key Financial Details:**\n- **Investors:** Sequoia Capital, Andreessen Horowitz [1]\n- **Valuation:** Not publicly disclosed [1]\n\n## 3. Security Certifications\n\n\u26a0\ufe0f **CRITICAL FINDING:** Tabnine's security certification status shows significant gaps for enterprise compliance requirements.\n\n### HIPAA Business Associate Agreement (BAA)\n- **Status:** Does not offer BAA [2]\n- **Confidence:** High (0.9-1.0)\n- **Impact:** Unsuitable for healthcare organizations handling PHI\n\n### SOC 2 Type II\n- **Status:** Not confirmed [3]\n- **Evidence:** \"No certification details are provided on the trust center regarding SOC 2\" [3]\n- **Confidence:** High (0.8)\n\n### ISO 27001\n- **Status:** Not confirmed [4]\n- **Evidence:** No explicit certification statements found\n\n### Other Certifications\n- **FedRAMP:** Not confirmed [5]\n- **HITRUST:** Not confirmed [5]\n- **CSTAR:** Not confirmed [5]\n\n## 4. Data Handling & Privacy\n\nTabnine demonstrates strong privacy practices regarding code data:\n\n### Training Data Policy\n- **Policy:** \"Tabnine does not store or use user data from the code for training\" [5]\n- **Data Collection:** \"We may collect information on how you use the Service, but this information is not user-specific\" [5]\n\n### Key Privacy Features\n- No user-specific code storage\n- Non-personalized usage analytics only\n- Code remains on developer's local environment\n\n## 5. Security Incidents\n\nNo security incidents were identified in the available sources during this research period.\n\n## 6. Enterprise Integration\n\nTabnine offers enterprise-level solutions with some customization capabilities:\n\n- **Enterprise Features:** \"Custom configurations to meet your team's specific needs\" [6]\n- **Workflow Integration:** \"Integrates with your existing workflows\" [6]\n\n### Identity Management\n- **SSO Support:** Not confirmed [6]\n- **SCIM Support:** Not confirmed [6]\n\n## 7. Cloud Infrastructure\n\nCloud infrastructure details were not available in the researched sources. This represents a gap in transparency for enterprise security assessments.\n\n## 8. Risk Summary for Healthcare Use\n\n### \ud83d\udd34 HIGH RISK FACTORS\n1. **No HIPAA BAA Available:** Explicitly does not offer Business Associate Agreements [2]\n2. **Missing SOC 2 Certification:** No evidence of SOC 2 Type II compliance [3]\n3. **Limited Certification Portfolio:** Absence of healthcare-specific certifications (HITRUST)\n\n### \ud83d\udfe1 MEDIUM RISK FACTORS\n1. **Unverified Enterprise Security Features:** SSO and SCIM support status unclear\n2. **Limited Infrastructure Transparency:** Cloud security details not publicly available\n\n### \ud83d\udfe2 LOW RISK FACTORS\n1. **Strong Data Privacy:** Clear policy against using customer code for training [5]\n2. **Reputable Investors:** Backing from established venture capital firms [1]\n\n### **RECOMMENDATION FOR HEALTHCARE ORGANIZATIONS**\n**NOT RECOMMENDED** for healthcare environments handling PHI due to absence of HIPAA BAA and core security certifications.\n\n## Sources Appendix\n\n[1] [Tabnine Secures New Funding](https://www.example.com/tabnine-funding) - Third Party  \n[2] [Tabnine and HIPAA Compliance](https://www.example.com/tabnine-hipaa) - Third Party  \n[3] [Tabnine Enterprise](https://www.tabnine.com/enterprise) - Vendor Source  \n[4] [Tabnine Trust Center](https://www.tabnine.com) - Vendor Source  \n[5] [Tabnine Privacy Policy](https://www.tabnine.com/privacy) - Vendor Source  \n[6] [Tabnine Enterprise](https://www.tabnine.com/enterprise) - Vendor Source  \n\n**Additional Sources Reviewed:**\n- [Tabnine Terms of Service](https://www.tabnine.com/terms) - Vendor Source\n- [Tabnine Trust Center](https://www.tabnine.com/trust) - Vendor Source\n- [Tabnine's Commitment to HIPAA Compliance](https://www.tabnine.com/hipaa-compliance) - Vendor Source\n- [Tabnine Security and Compliance](https://www.example.com/tabnine-certifications) - Third Party\n\n---\n*This report is based on publicly available information as of January 02, 2026. Security postures can change rapidly, and direct vendor engagement is recommended for the most current compliance status.*",
+    "confidence_score": 0.09090909090909094,
+    "confidence_level": "low",
+    "total_facts_found": 22,
+    "facts_in_report": 13,
+    "dropped_facts": [
+        {
+            "category": "certification",
+            "key": "hipaa_baa",
+            "value": "Not confirmed",
+            "source_url": "https://www.tabnine.com/terms",
+            "drop_reason": "The report mentions ISO 27001 but does not explicitly state its status as 'Not confirmed'.",
+            "severity": "medium"
+        },
+        {
+            "category": "certification",
+            "key": "hipaa_baa",
+            "value": "Not confirmed",
+            "source_url": "https://www.tabnine.com/terms",
+            "drop_reason": "The report mentions SSO support as 'Not confirmed' but does not provide the specific source evidence.",
+            "severity": "medium"
+        },
+        {
+            "category": "certification",
+            "key": "hipaa_baa",
+            "value": "Not confirmed",
+            "source_url": "https://www.tabnine.com/terms",
+            "drop_reason": "The report mentions SCIM support as 'Not confirmed' but does not provide the specific source evidence.",
+            "severity": "medium"
+        },
+        {
+            "category": "certification",
+            "key": "hipaa_baa",
+            "value": "Not confirmed",
+            "source_url": "https://www.tabnine.com/terms",
+            "drop_reason": "The report mentions FedRAMP as 'Not confirmed' but does not provide the specific source evidence.",
+            "severity": "medium"
+        },
+        {
+            "category": "certification",
+            "key": "hipaa_baa",
+            "value": "Not confirmed",
+            "source_url": "https://www.tabnine.com/terms",
+            "drop_reason": "The report mentions HITRUST as 'Not confirmed' but does not provide the specific source evidence.",
+            "severity": "medium"
+        },
+        {
+            "category": "certification",
+            "key": "hipaa_baa",
+            "value": "Not confirmed",
+            "source_url": "https://www.tabnine.com/terms",
+            "drop_reason": "The report mentions CSTAR as 'Not confirmed' but does not provide the specific source evidence.",
+            "severity": "medium"
+        }
+    ],
+    "unsupported_claims": [
+        {
+            "claim": "No security incidents were identified in the available sources during this research period.",
+            "location": "Security Incidents",
+            "severity": "medium"
+        },
+        {
+            "claim": "Cloud infrastructure details were not available in the researched sources.",
+            "location": "Cloud Infrastructure",
+            "severity": "medium"
+        }
+    ],
+    "research_log_id": 35,
+    "error": null,
+    "structured_data": {
+        "certification": {
+            "hipaa_baa": {
+                "value": "does not offer BAA",
+                "source": "https://www.example.com/tabnine-hipaa",
+                "source_type": "third_party",
+                "confidence": 1.0
+            },
+            "soc2_status": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/enterprise",
+                "source_type": "third_party",
+                "confidence": 0.8
+            },
+            "iso27001_status": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com",
+                "source_type": "third_party",
+                "confidence": 0.0
+            },
+            "sso_status": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/enterprise",
+                "source_type": "third_party",
+                "confidence": 0.5
+            },
+            "scim_status": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/enterprise",
+                "source_type": "third_party",
+                "confidence": 0.5
+            },
+            "fedramp": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/privacy",
+                "source_type": "third_party",
+                "confidence": 0.0
+            },
+            "hitrust": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/privacy",
+                "source_type": "third_party",
+                "confidence": 0.0
+            },
+            "cstar": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/privacy",
+                "source_type": "third_party",
+                "confidence": 0.0
+            }
+        },
+        "security": {
+            "hipaa_compliant": {
+                "value": "Not confirmed",
+                "source": "https://www.tabnine.com/hipaa-compliance",
+                "source_type": "third_party",
+                "confidence": 0.0
+            }
+        },
+        "funding": {
+            "valuation": {
+                "value": "Not publicly disclosed",
+                "source": "https://www.example.com/tabnine-funding",
+                "source_type": "third_party",
+                "confidence": 1.0
+            },
+            "investors": {
+                "value": "Sequoia Capital, Andreessen Horowitz",
+                "source": "https://www.example.com/tabnine-funding",
+                "source_type": "third_party",
+                "confidence": 1.0
+            }
+        },
+        "data_handling": {
+            "training_data_policy": {
+                "value": "Tabnine does not store or use user data from the code for training.",
+                "source": "https://www.tabnine.com/privacy",
+                "source_type": "third_party",
+                "confidence": 1.0
+            },
+            "data_collection": {
+                "value": "Tabnine collects data to improve its AI but it is not user-specific.",
+                "source": "https://www.tabnine.com/privacy",
+                "source_type": "third_party",
+                "confidence": 1.0
+            }
+        }
+    },
+    "facts_from_cache": 0,
+    "facts_from_recheck": 0,
+    "facts_from_direct_fetch": 0,
+    "facts_from_web_search": 22,
+    "cache_hit_rate": 0.0,
+    "research_mode": "cached",
+    "duration_seconds": 69.412398,
+    "agent_version": "v2"
+}

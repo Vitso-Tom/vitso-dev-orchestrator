@@ -1,0 +1,56 @@
+
+/* Print - Tighter line spacing in Assessment Context */
+@media print {
+    /* Reduce spacing in use cases content */
+    .use-cases-content, .section-content {
+        line-height: 1.3 !important;
+    }
+    
+    .use-cases-content strong {
+        margin-top: 6pt !important;
+        margin-bottom: 1pt !important;
+    }
+    
+    .use-cases-content strong:first-child {
+        margin-top: 0 !important;
+    }
+    
+    .use-cases-content br {
+        display: block !important;
+        content: "" !important;
+        margin-top: 2pt !important;
+    }
+    
+    /* Reduce padding in section content */
+    .context-section .section-content {
+        padding: 6pt 10pt 6pt 15pt !important;
+        font-size: 8pt !important;
+        line-height: 1.35 !important;
+    }
+    
+    /* Tighter concerns box */
+    .concerns-section .section-content {
+        padding: 6pt 10pt !important;
+        font-size: 8pt !important;
+    }
+    
+    /* Reduce overall context card spacing */
+    .context-card .card-body {
+        padding: 8pt !important;
+    }
+    
+    .context-inline {
+        margin-bottom: 8pt !important;
+        padding-bottom: 6pt !important;
+    }
+    
+    .context-section {
+        margin-bottom: 8pt !important;
+    }
+    
+    /* Section labels smaller */
+    .context-section .section-label {
+        font-size: 7pt !important;
+        margin-bottom: 3pt !important;
+    }
+}

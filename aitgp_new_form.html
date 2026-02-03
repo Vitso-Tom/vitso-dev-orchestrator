@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tool Governance Platform</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/forms.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Hover help tooltips */
+        .help-tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 0.5rem;
+            cursor: help;
+        }
+        .help-tooltip i {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .help-tooltip:hover i {
+            color: #3b82f6;
+        }
+        .help-tooltip .tooltip-text {
+            visibility: hidden;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+        }
+        .help-tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+        .help-tooltip:hover .tooltip-text {
+            visibility: visible;
+        }
+        .tooltip-text .tooltip-title {
+            font-weight: 600;
+            color: #f59e0b;
+            margin-bottom: 0.25rem;
+        }
+        .tooltip-text .tooltip-risk {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #334155;
+        }
+        
+        /* Section descriptions */
+        .step-description {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        .step-description i {
+            color: #3b82f6;
+            margin-right: 0.5rem;
+        }
+        
+        /* Required field indicator */
+        .required-note {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+        .required-note span {
+            color: #ef4444;
+        }
+        
+        /* Radio group improvements */
+        .radio-group-enhanced {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .radio-group-enhanced label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .radio-group-enhanced label:hover {
+            border-color: #3b82f6;
+        }
+        .radio-group-enhanced input:checked + span {
+            color: #3b82f6;
+        }
+        .radio-group-enhanced input {
+            margin-right: 0.5rem;
+        }
+        
+        /* Data type cards */
+        .data-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+        .data-type-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 2px solid #334155;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .data-type-card:hover {
+            border-color: #3b82f6;
+        }
+        .data-type-card.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .data-type-card.critical {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .data-type-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #64748b;
+        }
+        .data-type-card.selected i {
+            color: #3b82f6;
+        }
+        .data-type-card.critical i {
+            color: #ef4444;
+        }
+        .data-type-card input {
+            display: none;
+        }
+        .data-type-card .type-name {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        .data-type-card .type-hint {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-shield-alt"></i> AI Tool Governance Platform</h1>
+                <p>Comprehensive risk assessment for regulated healthcare environments</p>
+            </div>
+            <nav class="nav-tabs">
+                <a href="#" class="nav-tab active" data-tab="assess">New Assessment</a>
+                <a href="/precedents" class="nav-tab">Precedents</a>
+                <a href="#" class="nav-tab" data-tab="dashboard">Dashboard</a>
+            </nav>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }}"></i>
+                            {{ message }}
+                            <button class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="main-content">
+            <div id="assess-tab" class="tab-content active">
+                <div class="assessment-container">
+                    <!-- Risk Preview Card -->
+                    <div class="risk-preview">
+                        <h3><i class="fas fa-chart-line"></i> Risk Preview</h3>
+                        <div class="risk-meter">
+                            <div class="risk-level" id="risk-level-display">
+                                <span class="risk-score" id="risk-score">--</span>
+                                <span class="risk-label" id="risk-label">Not Calculated</span>
+                            </div>
+                            <div class="risk-factors" id="risk-factors">
+                                <div class="factor" data-factor="data_exposure"><span>Data Exposure</span><span class="score">--</span></div>
+                                <div class="factor" data-factor="identity_surface"><span>Identity Surface</span><span class="score">--</span></div>
+                                <div class="factor" data-factor="vendor_maturity"><span>Vendor Maturity</span><span class="score">--</span></div>
+                                <div class="factor" data-factor="ai_model_risk"><span>AI Model Risk</span><span class="score">--</span></div>
+                                <div class="factor" data-factor="integration_risk"><span>Integration Risk</span><span class="score">--</span></div>
+                                <div class="factor" data-factor="operational_risk"><span>Operational Risk</span><span class="score">--</span></div>
+                            </div>
+                        </div>
+                        <div class="precedent-matches" id="precedent-matches">
+                            <h4>Similar Tools</h4>
+                            <div class="matches-list" id="matches-list">
+                                <p class="no-matches">Enter tool details to see similar assessments</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assessment Form -->
+                    <div class="assessment-form">
+                        <form id="assessment-form" method="POST" action="/assess">
+                            <!-- Progress Indicator -->
+                            <div class="progress-indicator">
+                                <div class="step active" data-step="1">
+                                    <span class="step-number">1</span>
+                                    <span class="step-label">Your Use Case</span>
+                                </div>
+                                <div class="step" data-step="2">
+                                    <span class="step-number">2</span>
+                                    <span class="step-label">What You Know</span>
+                                </div>
+                                <div class="step" data-step="3">
+                                    <span class="step-number">3</span>
+                                    <span class="step-label">Context</span>
+                                </div>
+                            </div>
+
+                            <!-- Step 1: Your Use Case -->
+                            <div class="form-step active" data-step="1">
+                                <h3><i class="fas fa-bullseye"></i> Your Use Case</h3>
+                                <div class="step-description">
+                                    <i class="fas fa-info-circle"></i>
+                                    These are things only you know — research can help verify vendor claims but can't determine how <em>you</em> plan to use the tool.
+                                </div>
+                                <p class="required-note"><span>*</span> Required fields</p>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="tool_name">Tool Name <span style="color:#ef4444">*</span></label>
+                                        <input type="text" id="tool_name" name="tool_name" required placeholder="e.g., Cursor, GitHub Copilot">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="vendor">Vendor <span style="color:#ef4444">*</span></label>
+                                        <input type="text" id="vendor" name="vendor" required placeholder="e.g., Anysphere, Microsoft">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tool_category">Category</label>
+                                        <select id="tool_category" name="tool_category">
+                                            <option value="">Select Category</option>
+                                            <option value="code_assistant">Code Assistant</option>
+                                            <option value="chat_assistant">Chat/Writing Assistant</option>
+                                            <option value="data_analysis">Data Analysis</option>
+                                            <option value="automation">Automation/Agents</option>
+                                            <option value="documentation">Documentation</option>
+                                            <option value="security">Security</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="deployment_model">
+                                            Your Deployment Model
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">How will you deploy this?</span>
+                                                    <strong>SaaS:</strong> Vendor-hosted cloud service<br>
+                                                    <strong>On-Prem:</strong> Hosted in your environment<br>
+                                                    <strong>Hybrid:</strong> Mix of both
+                                                    <div class="tooltip-risk">⚡ SaaS = higher data exposure risk</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <select id="deployment_model" name="deployment_model">
+                                            <option value="saas" selected>SaaS (Vendor Cloud)</option>
+                                            <option value="on_prem">On-Premises</option>
+                                            <option value="hybrid">Hybrid</option>
+                                            <option value="unknown">Unknown</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label>
+                                            Data Types You Will Expose <span style="color:#ef4444">*</span>
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">What data will touch this tool?</span>
+                                                    Select all data types that may be processed, stored, or transmitted through this tool.
+                                                    <div class="tooltip-risk">⚠️ PHI requires HIPAA BAA from vendor</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="data-type-grid">
+                                            <label class="data-type-card" onclick="this.classList.toggle('critical'); this.classList.toggle('selected');">
+                                                <input type="checkbox" name="data_types" value="phi">
+                                                <i class="fas fa-heartbeat"></i>
+                                                <span class="type-name">PHI</span>
+                                                <span class="type-hint">Health records</span>
+                                            </label>
+                                            <label class="data-type-card" onclick="this.classList.toggle('selected');">
+                                                <input type="checkbox" name="data_types" value="pii">
+                                                <i class="fas fa-user-shield"></i>
+                                                <span class="type-name">PII</span>
+                                                <span class="type-hint">Personal info</span>
+                                            </label>
+                                            <label class="data-type-card" onclick="this.classList.toggle('selected');">
+                                                <input type="checkbox" name="data_types" value="code">
+                                                <i class="fas fa-code"></i>
+                                                <span class="type-name">Source Code</span>
+                                                <span class="type-hint">Proprietary code</span>
+                                            </label>
+                                            <label class="data-type-card" onclick="this.classList.toggle('selected');">
+                                                <input type="checkbox" name="data_types" value="financial">
+                                                <i class="fas fa-dollar-sign"></i>
+                                                <span class="type-name">Financial</span>
+                                                <span class="type-hint">Payment, billing</span>
+                                            </label>
+                                            <label class="data-type-card" onclick="this.classList.toggle('selected');">
+                                                <input type="checkbox" name="data_types" value="credentials">
+                                                <i class="fas fa-key"></i>
+                                                <span class="type-name">Credentials</span>
+                                                <span class="type-hint">Keys, passwords</span>
+                                            </label>
+                                            <label class="data-type-card" onclick="this.classList.toggle('selected');">
+                                                <input type="checkbox" name="data_types" value="internal">
+                                                <i class="fas fa-building"></i>
+                                                <span class="type-name">Internal Only</span>
+                                                <span class="type-hint">Non-sensitive</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label>Who Will Use This?</label>
+                                        <div class="checkbox-group">
+                                            <label><input type="checkbox" name="intended_users" value="developers"> Developers</label>
+                                            <label><input type="checkbox" name="intended_users" value="analysts"> Analysts</label>
+                                            <label><input type="checkbox" name="intended_users" value="admins"> Administrators</label>
+                                            <label><input type="checkbox" name="intended_users" value="clinical"> Clinical Staff</label>
+                                            <label><input type="checkbox" name="intended_users" value="all_users"> All Users</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="data_retention">
+                                            Your Retention Needs
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">How long should data persist?</span>
+                                                    Your organizational requirements for data retention. Research will compare this against vendor policy.
+                                                    <div class="tooltip-risk">⚡ Longer retention = more exposure risk</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <select id="data_retention" name="data_retention">
+                                            <option value="none">No Data Should Be Stored</option>
+                                            <option value="session_only">Session Only</option>
+                                            <option value="30_days">Up to 30 Days</option>
+                                            <option value="90_days">Up to 90 Days</option>
+                                            <option value="1_year_plus">1 Year+</option>
+                                            <option value="unknown" selected>Unknown / Flexible</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="timeline_pressure">
+                                            Timeline Pressure
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">How urgent is this?</span>
+                                                    Urgency affects operational risk — rushed deployments may skip important controls.
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <select id="timeline_pressure" name="timeline_pressure">
+                                            <option value="flexible">Flexible</option>
+                                            <option value="normal" selected>Normal</option>
+                                            <option value="urgent">Urgent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: What You Know -->
+                            <div class="form-step" data-step="2">
+                                <h3><i class="fas fa-search"></i> What You Know</h3>
+                                <div class="step-description">
+                                    <i class="fas fa-info-circle"></i>
+                                    Answer if you know — <strong>Unknown is OK!</strong> Research will verify your answers and fill gaps. Hover icons explain why each matters.
+                                </div>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>
+                                            HIPAA BAA Available?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Business Associate Agreement</span>
+                                                    A legal contract required when a vendor handles PHI. Without a BAA, using this tool for PHI is prohibited.
+                                                    <div class="tooltip-risk">🚫 PHI + No BAA = Automatic NO-GO</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="radio-group-enhanced">
+                                            <label><input type="radio" name="vendor_hipaa_baa" value="true"><span>Yes</span></label>
+                                            <label><input type="radio" name="vendor_hipaa_baa" value="false"><span>No</span></label>
+                                            <label><input type="radio" name="vendor_hipaa_baa" value="" checked><span>Unknown</span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            SOC 2 Type II Certified?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">SOC 2 Type II Audit</span>
+                                                    Third-party audit verifying security controls over time. Type II is more rigorous than Type I.
+                                                    <div class="tooltip-risk">✅ Strong indicator of security maturity</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="radio-group-enhanced">
+                                            <label><input type="radio" name="vendor_soc2" value="true"><span>Yes</span></label>
+                                            <label><input type="radio" name="vendor_soc2" value="false"><span>No</span></label>
+                                            <label><input type="radio" name="vendor_soc2" value="" checked><span>Unknown</span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="training_on_inputs">
+                                            Trains on Your Data?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">AI Model Training</span>
+                                                    Some vendors use your prompts and data to improve their AI models. This may expose sensitive information.
+                                                    <div class="tooltip-risk">⚠️ Training = your data may influence other users' outputs</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <select id="training_on_inputs" name="training_on_inputs">
+                                            <option value="unknown" selected>Unknown</option>
+                                            <option value="no">No - Never trains on our data</option>
+                                            <option value="opt_out_available">Yes, but opt-out available</option>
+                                            <option value="yes">Yes - Trains on customer data</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="model_provider">
+                                            Model Provider(s)
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Underlying AI Models</span>
+                                                    Which AI models power this tool? Many tools use multiple providers (e.g., OpenAI + Anthropic).
+                                                    <div class="tooltip-risk">🔗 Each provider is a subprocessor with their own data policies</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <select id="model_provider" name="model_provider">
+                                            <option value="unknown" selected>Unknown</option>
+                                            <option value="openai">OpenAI (GPT)</option>
+                                            <option value="anthropic">Anthropic (Claude)</option>
+                                            <option value="google">Google (Gemini)</option>
+                                            <option value="aws">AWS Bedrock</option>
+                                            <option value="azure">Azure OpenAI</option>
+                                            <option value="multiple">Multiple Providers</option>
+                                            <option value="self_hosted">Self-Hosted/Open Source</option>
+                                            <option value="proprietary">Vendor's Own Model</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            Agent/Autonomous Capabilities?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Agentic AI</span>
+                                                    Can the tool take actions autonomously (run code, make API calls, modify files) without explicit approval for each action?
+                                                    <div class="tooltip-risk">⚡ Autonomous = higher risk of unintended actions</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="radio-group-enhanced">
+                                            <label><input type="radio" name="agent_capabilities" value="true"><span>Yes</span></label>
+                                            <label><input type="radio" name="agent_capabilities" value="false"><span>No</span></label>
+                                            <label><input type="radio" name="agent_capabilities" value="" checked><span>Unknown</span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            MCP Support?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Model Context Protocol</span>
+                                                    MCP allows the AI to connect to external tools and data sources (databases, APIs, file systems). Expands what data the AI can access.
+                                                    <div class="tooltip-risk">🔗 MCP = expanded data exposure surface</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="radio-group-enhanced">
+                                            <label><input type="radio" name="mcp_support" value="true"><span>Yes</span></label>
+                                            <label><input type="radio" name="mcp_support" value="false"><span>No</span></label>
+                                            <label><input type="radio" name="mcp_support" value="" checked><span>Unknown</span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            RAG Enabled?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Retrieval Augmented Generation</span>
+                                                    RAG connects the AI to external knowledge bases or document stores. Can access and incorporate external data into responses.
+                                                    <div class="tooltip-risk">📚 RAG = AI accesses your documents/data stores</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="radio-group-enhanced">
+                                            <label><input type="radio" name="rag_enabled" value="true"><span>Yes</span></label>
+                                            <label><input type="radio" name="rag_enabled" value="false"><span>No</span></label>
+                                            <label><input type="radio" name="rag_enabled" value="" checked><span>Unknown</span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            Subprocessors Disclosed?
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Third-Party Data Processors</span>
+                                                    Does the vendor clearly disclose who else processes your data? Hidden subprocessors = hidden risk.
+                                                    <div class="tooltip-risk">⚠️ Undisclosed subprocessors = "Laggards to Liars" risk</div>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <div class="radio-group-enhanced">
+                                            <label><input type="radio" name="subprocessors_disclosed" value="true"><span>Yes</span></label>
+                                            <label><input type="radio" name="subprocessors_disclosed" value="false"><span>No</span></label>
+                                            <label><input type="radio" name="subprocessors_disclosed" value="" checked><span>Unknown</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Context -->
+                            <div class="form-step" data-step="3">
+                                <h3><i class="fas fa-clipboard"></i> Business Context</h3>
+                                <div class="step-description">
+                                    <i class="fas fa-info-circle"></i>
+                                    Optional context that helps interpret results and appears in the assessment report.
+                                </div>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="business_sponsor">Business Sponsor</label>
+                                        <input type="text" id="business_sponsor" name="business_sponsor" placeholder="e.g., VP Engineering, CTO">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="requesting_team">Requesting Team</label>
+                                        <input type="text" id="requesting_team" name="requesting_team" placeholder="e.g., Platform Engineering">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="use_cases">Intended Use Cases</label>
+                                        <textarea id="use_cases" name="use_cases" rows="3" placeholder="Describe how this tool will be used in your environment..."></textarea>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="specific_concerns">
+                                            Specific Concerns or Questions
+                                            <span class="help-tooltip">
+                                                <i class="fas fa-question-circle"></i>
+                                                <span class="tooltip-text">
+                                                    <span class="tooltip-title">Focus Areas</span>
+                                                    Any specific concerns you want the research to address? These will be prioritized in the assessment.
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <textarea id="specific_concerns" name="specific_concerns" rows="3" placeholder="e.g., 'Concerned about data leaving US', 'Need to understand their OpenAI arrangement'"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Navigation -->
+                            <div class="form-navigation">
+                                <button type="button" id="prev-btn" class="btn btn-secondary" style="display: none;">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button type="button" id="next-btn" class="btn btn-primary">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button type="submit" id="submit-btn" class="btn btn-success" style="display: none;">
+                                    <i class="fas fa-search"></i> Assess Tool
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab (unchanged) -->
+            <div id="dashboard-tab" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Recent Assessments</h3>
+                        <p class="metric-value" id="recent-count">--</p>
+                        <p class="metric-label">Last 30 days</p>
+                    </div>
+                    <div class="metric-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Risk Distribution</h3>
+                        <div class="risk-distribution" id="risk-distribution">
+                            <div class="risk-bar low"><span>Low</span><div class="bar"><div class="fill"></div></div></div>
+                            <div class="risk-bar moderate"><span>Moderate</span><div class="bar"><div class="fill"></div></div></div>
+                            <div class="risk-bar high"><span>High</span><div class="bar"><div class="fill"></div></div></div>
+                        </div>
+                    </div>
+                    <div class="metric-card recent-assessments">
+                        <h3><i class="fas fa-clock"></i> Recent Assessments</h3>
+                        <div class="assessment-list" id="recent-assessments">
+                            <p class="loading">Loading recent assessments...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 AI Tool Governance Platform. Enabling secure AI adoption in healthcare.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/risk-calculator.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/precedent-search.js') }}"></script>
+</body>
+</html>

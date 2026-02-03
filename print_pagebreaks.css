@@ -1,0 +1,157 @@
+
+/* Page Break & Spacing Optimization */
+@media print {
+    /* Tighter page margins */
+    @page {
+        size: letter;
+        margin: 0.5in 0.6in 0.6in 0.6in;
+    }
+    
+    /* Reduce base spacing */
+    .card, .results-card, .context-card {
+        margin: 0 0 8pt 0 !important;
+        padding: 0 0 8pt 0 !important;
+    }
+    
+    .card-header {
+        padding: 0 0 4pt 0 !important;
+        margin: 0 0 6pt 0 !important;
+    }
+    
+    .card-body {
+        padding: 0 !important;
+    }
+    
+    /* Keep sections together - don't break inside */
+    .card, .results-card, .context-card,
+    .recommendation-box, .disqualifiers-box, .conditions-box,
+    .category-scores, .cert-category, .context-item,
+    .summary-grid, table {
+        page-break-inside: avoid !important;
+    }
+    
+    /* Force page break BEFORE research report */
+    .research-section, 
+    [class*="research"],
+    .card:has(.research-report) {
+        page-break-before: always !important;
+    }
+    
+    /* Never break after headings */
+    h1, h2, h3, h4, h5, h6,
+    .card-header, .cert-category h4 {
+        page-break-after: avoid !important;
+    }
+    
+    /* Orphan/widow control */
+    p, li {
+        orphans: 3;
+        widows: 3;
+    }
+    
+    /* Tighter spacing on score rows */
+    .score-row {
+        margin: 4pt 0 !important;
+    }
+    
+    /* Compact certifications */
+    .cert-badge {
+        margin: 1pt 3pt 1pt 0 !important;
+        padding: 1pt 4pt !important;
+    }
+    
+    .cert-category {
+        margin-bottom: 6pt !important;
+    }
+    
+    /* Compact table */
+    th, td {
+        padding: 3pt 6pt !important;
+        font-size: 8pt !important;
+    }
+    
+    /* Compact context section */
+    .context-item {
+        margin-bottom: 6pt !important;
+    }
+    
+    .context-item .value {
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+    }
+    
+    /* Reduce research report spacing */
+    .research-report h1 {
+        margin: 12pt 0 6pt 0 !important;
+        font-size: 14pt !important;
+    }
+    
+    .research-report h2 {
+        margin: 10pt 0 5pt 0 !important;
+        font-size: 12pt !important;
+    }
+    
+    .research-report h3 {
+        margin: 8pt 0 4pt 0 !important;
+        font-size: 11pt !important;
+    }
+    
+    .research-report p {
+        margin: 4pt 0 !important;
+        font-size: 9pt !important;
+    }
+    
+    .research-report ul, .research-report ol {
+        margin: 4pt 0 4pt 15pt !important;
+    }
+    
+    .research-report li {
+        margin: 2pt 0 !important;
+        font-size: 9pt !important;
+    }
+    
+    /* Risk score more compact */
+    .risk-score-display {
+        margin: 10pt 0 !important;
+    }
+    
+    .score-circle {
+        width: 60pt !important;
+        height: 60pt !important;
+        padding-top: 14pt !important;
+    }
+    
+    .score-circle .score {
+        font-size: 22pt !important;
+    }
+    
+    .score-circle .label {
+        font-size: 7pt !important;
+    }
+    
+    /* Recommendation box compact */
+    .recommendation-box {
+        padding: 8pt !important;
+        margin: 8pt 0 !important;
+    }
+    
+    .recommendation-badge {
+        font-size: 14pt !important;
+    }
+    
+    /* Summary more compact */
+    .summary-item {
+        padding: 2pt 0 !important;
+    }
+    
+    /* === STRATEGIC PAGE BREAKS === */
+    
+    /* Page 1: Assessment Summary + Risk Analysis + Category Scores */
+    /* Page 2: Context + Certifications + Reconciliation */
+    /* Page 3+: Research Report */
+    
+    /* Add class to research card for page break */
+    .card:nth-of-type(n+5) {
+        page-break-before: auto !important;
+    }
+}

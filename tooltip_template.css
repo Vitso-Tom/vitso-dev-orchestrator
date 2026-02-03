@@ -1,0 +1,31 @@
+
+/* Template-based tooltip - show on row hover */
+.category-row .category-tooltip {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    margin-bottom: 8px;
+    background: #0f172a;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #e2e8f0;
+    width: 300px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    line-height: 1.5;
+    font-weight: normal;
+}
+
+.category-row:hover .category-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.category-row {
+    position: relative;
+}

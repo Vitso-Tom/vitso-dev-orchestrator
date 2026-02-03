@@ -1,0 +1,109 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: vitso-postgres
+    environment:
+      POSTGRES_USER: vitso
+      POSTGRES_PASSWORD: vitso_dev_pass
+      POSTGRES_DB: vitso_dev_orchestrator
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vitso"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for job queue
+  redis:
+    image: redis:7-alpine
+    container_name: vitso-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vitso-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://vitso:vitso_dev_pass@postgres/vitso_dev_orchestrator
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    ports:
+      - "8000:8000"
+      - "5050-5100:5050-5100"
+    volumes:
+      - ./backend:/app
+      - demo_output:/mnt/demo-output
+      - /home/temlock/aitgp-app/job-53:/mnt/demo-output/job-53
+      - /var/run/docker.sock:/var/run/docker.sock  # For Docker sandboxing
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # RQ Worker for job processing
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vitso-worker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://vitso:vitso_dev_pass@postgres/vitso_dev_orchestrator
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_USERNAME=${GITHUB_USERNAME}
+      - GITHUB_AUTO_PUSH=${GITHUB_AUTO_PUSH:-false}
+    volumes:
+      - ./backend:/app
+      - ./vdo_github:/vdo_github
+      - demo_output:/mnt/demo-output
+      - /home/temlock/aitgp-app/job-53:/mnt/demo-output/job-53
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: rq worker vitso-jobs --with-scheduler
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vitso-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    command: npm run dev -- --host
+
+volumes:
+  postgres_data:
+  redis_data:
+  demo_output:

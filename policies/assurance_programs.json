@@ -1,0 +1,430 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-01-03",
+  "maintained_by": "AITGP/VDO",
+  "match_policy": {
+    "case_insensitive": true,
+    "normalize_whitespace": true,
+    "strip_punctuation": true,
+    "max_alias_edit_distance": 0,
+    "notes": [
+      "Programs must match via canonical_name, aliases, or levels.aliases.",
+      "If a detected candidate does not match this index, record it as unmapped_candidate with a citation URL and exact quote snippet. Do not treat it as a recognized program.",
+      "Do not infer certifications, authorizations, or compliance programs. Only assert what is evidenced.",
+      "Do not attribute a program to the vendor if the evidence only applies to a hosting provider or partner."
+    ]
+  },
+  "programs": [
+    {
+      "id": "HITRUST_CSF",
+      "canonical_name": "HITRUST CSF",
+      "category": "certification",
+      "assurance_type": "certification_or_assessment",
+      "description": "HITRUST Common Security Framework certification and assessments.",
+      "levels": [
+        { "id": "HITRUST_E1", "name": "e1", "aliases": ["hitrust e1", "hitrust csf e1", "e1 assessment", "hitrust e1 assessment"] },
+        { "id": "HITRUST_I1", "name": "i1", "aliases": ["hitrust i1", "hitrust csf i1", "i1 assessment", "hitrust i1 assessment"] },
+        { "id": "HITRUST_R2", "name": "r2", "aliases": ["hitrust r2", "hitrust csf r2", "r2 assessment", "hitrust r2 assessment", "hitrust certification r2"] }
+      ],
+      "aliases": ["hitrust", "hitrust csf", "hitrust certified", "hitrust certification", "hitrust assurance program"],
+      "holder_attribution_rules": {
+        "vendor_only_if": [
+          "Evidence explicitly states the vendor is HITRUST certified or assessed.",
+          "Evidence includes a HITRUST letter, registry reference, or vendor trust center statement naming the vendor entity."
+        ],
+        "avoid_misattribution_examples": [
+          "Hosting provider is HITRUST certified but the vendor is not.",
+          "A partner platform is HITRUST certified but the vendor only integrates with it."
+        ]
+      }
+    },
+
+    {
+      "id": "SOC_2",
+      "canonical_name": "SOC 2",
+      "category": "attestation",
+      "assurance_type": "attestation_report",
+      "description": "Service Organization Controls reporting for security and related trust services criteria.",
+      "levels": [
+        { "id": "SOC2_TYPE_I", "name": "Type I", "aliases": ["soc 2 type i", "soc2 type i", "soc2 type 1", "soc 2 type 1"] },
+        { "id": "SOC2_TYPE_II", "name": "Type II", "aliases": ["soc 2 type ii", "soc2 type ii", "soc2 type 2", "soc 2 type 2"] }
+      ],
+      "aliases": ["soc2", "soc 2 report", "aicpa soc 2"],
+      "notes": [
+        "SOC 2 is an attestation report, not a certification.",
+        "Treat phrases like 'SOC 2 certified' as vendor-claimed language that still requires evidence."
+      ]
+    },
+
+    {
+      "id": "SOC_1",
+      "canonical_name": "SOC 1",
+      "category": "attestation",
+      "assurance_type": "attestation_report",
+      "levels": [
+        { "id": "SOC1_TYPE_I", "name": "Type I", "aliases": ["soc 1 type i", "soc1 type i", "soc1 type 1", "soc 1 type 1"] },
+        { "id": "SOC1_TYPE_II", "name": "Type II", "aliases": ["soc 1 type ii", "soc1 type ii", "soc1 type 2", "soc 1 type 2"] }
+      ],
+      "aliases": ["soc1", "soc 1 report", "ssae 18 soc 1"]
+    },
+
+    {
+      "id": "SOC_3",
+      "canonical_name": "SOC 3",
+      "category": "attestation",
+      "assurance_type": "attestation_report",
+      "aliases": ["soc3", "soc 3 report", "soc 3 seal"]
+    },
+
+    {
+      "id": "ISO_IEC_27001",
+      "canonical_name": "ISO/IEC 27001",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "Information Security Management System certification.",
+      "levels": [
+        { "id": "ISO_27001_2013", "name": "2013", "aliases": ["iso 27001:2013", "iso/iec 27001:2013"] },
+        { "id": "ISO_27001_2022", "name": "2022", "aliases": ["iso 27001:2022", "iso/iec 27001:2022"] }
+      ],
+      "aliases": ["iso 27001", "iso/iec 27001", "iso27001"]
+    },
+
+    {
+      "id": "ISO_IEC_27701",
+      "canonical_name": "ISO/IEC 27701",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "Privacy Information Management extension for ISO 27001.",
+      "aliases": ["iso 27701", "iso/iec 27701", "iso27701"]
+    },
+
+    {
+      "id": "ISO_IEC_27017",
+      "canonical_name": "ISO/IEC 27017",
+      "category": "certification",
+      "assurance_type": "certification_or_scheme_dependent",
+      "description": "Cloud security controls guidance. May be certified in some schemes in conjunction with ISO 27001.",
+      "aliases": ["iso 27017", "iso/iec 27017"]
+    },
+
+    {
+      "id": "ISO_IEC_27018",
+      "canonical_name": "ISO/IEC 27018",
+      "category": "certification",
+      "assurance_type": "certification_or_scheme_dependent",
+      "description": "Protection of PII in public clouds acting as PII processors.",
+      "aliases": ["iso 27018", "iso/iec 27018"]
+    },
+
+    {
+      "id": "ISO_9001",
+      "canonical_name": "ISO 9001",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "Quality Management System certification.",
+      "levels": [
+        { "id": "ISO_9001_2015", "name": "2015", "aliases": ["iso 9001:2015"] }
+      ],
+      "aliases": ["iso 9001", "iso9001"]
+    },
+
+    {
+      "id": "CSA_STAR",
+      "canonical_name": "CSA STAR",
+      "category": "assurance_program",
+      "assurance_type": "cloud_assurance",
+      "description": "Cloud Security Alliance STAR program.",
+      "levels": [
+        { "id": "CSA_STAR_LEVEL_1", "name": "Level 1", "aliases": ["csa star level 1", "star level 1", "csa star self assessment"] },
+        { "id": "CSA_STAR_LEVEL_2", "name": "Level 2", "aliases": ["csa star level 2", "star level 2", "csa star certification", "csa star attestation"] }
+      ],
+      "aliases": ["csa star", "cloud security alliance star", "star registry"]
+    },
+
+    {
+      "id": "PCI_DSS",
+      "canonical_name": "PCI DSS",
+      "category": "standard",
+      "assurance_type": "compliance_standard",
+      "description": "Payment Card Industry Data Security Standard compliance.",
+      "levels": [
+        { "id": "PCI_DSS_V4", "name": "v4.x", "aliases": ["pci dss 4", "pci dss v4", "pci dss 4.0"] }
+      ],
+      "aliases": ["pci dss", "pcidss", "pci compliance"]
+    },
+
+    {
+      "id": "HIPAA",
+      "canonical_name": "HIPAA",
+      "category": "regulatory",
+      "assurance_type": "regulatory_posture",
+      "description": "US healthcare privacy and security law and related rules. Not certifiable.",
+      "aliases": ["hipaa", "hipaa compliant", "hipaa compliance", "hipaa eligible", "hipaa readiness"],
+      "notes": [
+        "HIPAA is not a certification.",
+        "BAA posture should be evaluated separately as contractual_posture."
+      ]
+    },
+
+    {
+      "id": "BAA",
+      "canonical_name": "Business Associate Agreement",
+      "category": "contractual",
+      "assurance_type": "contractual_posture",
+      "description": "Willingness to sign a HIPAA BAA for handling PHI.",
+      "aliases": ["baa", "business associate agreement", "hipaa baa"],
+      "levels": [
+        { "id": "BAA_REFUSES", "name": "Refuses", "aliases": ["will not sign a baa", "no baa", "does not sign baa", "no hipaa workloads", "ph i not permitted", "phi not permitted"] },
+        { "id": "BAA_CONDITIONAL", "name": "Conditional", "aliases": ["baa available on request", "baa enterprise only", "baa for certain plans", "baa upon negotiation"] },
+        { "id": "BAA_OFFERS", "name": "Offers", "aliases": ["will sign a baa", "baa available", "baa provided", "baa offered"] },
+        { "id": "BAA_UNCLEAR", "name": "Unclear", "aliases": ["baa unclear", "no baa statement found"] }
+      ],
+      "notes": [
+        "Search for refusal language first, then willingness language.",
+        "If no evidence is found, use BAA_UNCLEAR with explicit statement that no public evidence was found."
+      ]
+    },
+
+    {
+      "id": "GDPR",
+      "canonical_name": "GDPR",
+      "category": "regulatory",
+      "assurance_type": "regulatory_posture",
+      "description": "EU General Data Protection Regulation. Not a certification.",
+      "aliases": ["gdpr", "eu gdpr", "gdpr compliant", "gdpr compliance"]
+    },
+
+    {
+      "id": "UK_GDPR",
+      "canonical_name": "UK GDPR",
+      "category": "regulatory",
+      "assurance_type": "regulatory_posture",
+      "aliases": ["uk gdpr", "united kingdom gdpr", "gdpr uk"]
+    },
+
+    {
+      "id": "CCPA_CPRA",
+      "canonical_name": "CCPA/CPRA",
+      "category": "regulatory",
+      "assurance_type": "regulatory_posture",
+      "aliases": ["ccpa", "cpra", "ccpa compliant", "california consumer privacy act", "california privacy rights act"]
+    },
+
+    {
+      "id": "EU_US_DPF",
+      "canonical_name": "EU-US Data Privacy Framework",
+      "category": "assurance_program",
+      "assurance_type": "privacy_framework",
+      "aliases": ["data privacy framework", "eu-us dpf", "dpf", "eu us data privacy framework"]
+    },
+
+    {
+      "id": "FIPS_199",
+      "canonical_name": "FIPS 199",
+      "category": "standard",
+      "assurance_type": "impact_classification",
+      "description": "FIPS 199 security categorization (Low, Moderate, High). Often referenced in baseline selection and government authorization contexts.",
+      "levels": [
+        { "id": "FIPS_199_LOW", "name": "Low", "aliases": ["fips 199 low", "fips199 low", "fips low", "low impact", "low baseline"] },
+        { "id": "FIPS_199_MODERATE", "name": "Moderate", "aliases": ["fips 199 moderate", "fips199 moderate", "fips moderate", "moderate impact", "moderate baseline", "medium impact", "medium baseline"] },
+        { "id": "FIPS_199_HIGH", "name": "High", "aliases": ["fips 199 high", "fips199 high", "fips high", "high impact", "high baseline"] }
+      ],
+      "aliases": ["fips 199", "fips199", "security categorization", "security categorization fips 199"],
+      "notes": [
+        "If a vendor claims 'moderate' or 'high' without naming FIPS 199, do not infer. Capture the phrase as unmapped_candidate unless FIPS 199 is explicitly referenced."
+      ]
+    },
+
+    {
+      "id": "NIST_SP_800_53",
+      "canonical_name": "NIST SP 800-53",
+      "category": "standard",
+      "assurance_type": "control_framework",
+      "description": "US federal information system controls catalog. Not a certification by itself.",
+      "aliases": ["nist 800-53", "nist sp 800-53", "800-53", "800 53"]
+    },
+
+    {
+      "id": "NIST_SP_800_171",
+      "canonical_name": "NIST SP 800-171",
+      "category": "standard",
+      "assurance_type": "control_framework",
+      "aliases": ["nist 800-171", "nist sp 800-171", "800-171", "800 171"]
+    },
+
+    {
+      "id": "NIST_CSF",
+      "canonical_name": "NIST Cybersecurity Framework",
+      "category": "standard",
+      "assurance_type": "framework",
+      "levels": [
+        { "id": "NIST_CSF_1_1", "name": "1.1", "aliases": ["nist csf 1.1", "csf 1.1"] },
+        { "id": "NIST_CSF_2_0", "name": "2.0", "aliases": ["nist csf 2.0", "csf 2.0", "nist csf 2"] }
+      ],
+      "aliases": ["nist csf", "nist cybersecurity framework"]
+    },
+
+    {
+      "id": "CMMC",
+      "canonical_name": "CMMC",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "Cybersecurity Maturity Model Certification program for defense industrial base.",
+      "levels": [
+        { "id": "CMMC_L1", "name": "Level 1", "aliases": ["cmmc level 1", "cmmc l1"] },
+        { "id": "CMMC_L2", "name": "Level 2", "aliases": ["cmmc level 2", "cmmc l2"] },
+        { "id": "CMMC_L3", "name": "Level 3", "aliases": ["cmmc level 3", "cmmc l3"] }
+      ],
+      "aliases": ["cmmc", "cybersecurity maturity model certification"]
+    },
+
+    {
+      "id": "FEDRAMP",
+      "canonical_name": "FedRAMP",
+      "category": "authorization",
+      "assurance_type": "government_authorization",
+      "description": "US Federal Risk and Authorization Management Program authorization.",
+      "levels": [
+        { "id": "FEDRAMP_LOW", "name": "Low", "aliases": ["fedramp low"] },
+        { "id": "FEDRAMP_MODERATE", "name": "Moderate", "aliases": ["fedramp moderate", "fedramp medium"] },
+        { "id": "FEDRAMP_HIGH", "name": "High", "aliases": ["fedramp high"] }
+      ],
+      "aliases": ["fedramp", "fedramp authorized", "fedramp authorization"]
+    },
+
+    {
+      "id": "STATE_RAMP",
+      "canonical_name": "StateRAMP",
+      "category": "authorization",
+      "assurance_type": "government_authorization",
+      "aliases": ["stateramp", "state ramp"]
+    },
+
+    {
+      "id": "FISMA",
+      "canonical_name": "FISMA",
+      "category": "regulatory",
+      "assurance_type": "regulatory_posture",
+      "aliases": ["fisma", "fisma compliance"]
+    },
+
+    {
+      "id": "FIPS_140",
+      "canonical_name": "FIPS 140",
+      "category": "certification",
+      "assurance_type": "cryptographic_validation",
+      "levels": [
+        { "id": "FIPS_140_2", "name": "140-2", "aliases": ["fips 140-2", "fips 1402", "fips140-2"] },
+        { "id": "FIPS_140_3", "name": "140-3", "aliases": ["fips 140-3", "fips 1403", "fips140-3"] }
+      ],
+      "aliases": ["fips 140", "fips 140 validation", "fips validated"]
+    },
+
+    {
+      "id": "ISO_IEC_22301",
+      "canonical_name": "ISO 22301",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "Business Continuity Management System certification.",
+      "aliases": ["iso 22301", "iso22301"]
+    },
+
+    {
+      "id": "ISO_IEC_20000_1",
+      "canonical_name": "ISO/IEC 20000-1",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "IT Service Management System certification.",
+      "aliases": ["iso 20000-1", "iso/iec 20000-1", "iso 20000"]
+    },
+
+    {
+      "id": "OWASP_ASVS",
+      "canonical_name": "OWASP ASVS",
+      "category": "standard",
+      "assurance_type": "application_security_standard",
+      "aliases": ["owasp asvs", "application security verification standard"]
+    },
+
+    {
+      "id": "SIG_LITE_OR_SIG",
+      "canonical_name": "SIG Questionnaire",
+      "category": "assurance_artifact",
+      "assurance_type": "questionnaire",
+      "aliases": ["sig", "standardized information gathering", "shared assessments sig", "sig lite"]
+    },
+
+    {
+      "id": "NIST_AI_RMF",
+      "canonical_name": "NIST AI RMF",
+      "category": "standard",
+      "assurance_type": "ai_risk_framework",
+      "aliases": ["nist ai rmf", "ai risk management framework"]
+    },
+
+    {
+      "id": "ISO_IEC_42001",
+      "canonical_name": "ISO/IEC 42001",
+      "category": "certification",
+      "assurance_type": "certification",
+      "description": "AI management system standard (AIMS).",
+      "aliases": ["iso 42001", "iso/iec 42001", "ai management system iso"]
+    },
+
+    {
+      "id": "ITAR",
+      "canonical_name": "ITAR",
+      "category": "regulatory",
+      "assurance_type": "export_control_regime",
+      "description": "International Traffic in Arms Regulations. Not a certification. Often appears as contractual or handling restrictions for export-controlled technical data.",
+      "aliases": [
+        "itar",
+        "itar compliant",
+        "itar compliance",
+        "itar restricted",
+        "itar controlled",
+        "export controlled",
+        "export-controlled",
+        "usml",
+        "united states munitions list"
+      ],
+      "notes": [
+        "Treat as regulatory posture with operational constraints.",
+        "Capture explicit statements about whether ITAR-controlled data is supported or excluded.",
+        "Avoid inferring ITAR readiness from general government compliance language."
+      ]
+    },
+
+    {
+      "id": "EAR",
+      "canonical_name": "EAR",
+      "category": "regulatory",
+      "assurance_type": "export_control_regime",
+      "description": "Export Administration Regulations. Not a certification. Often appears with ECCN or export classification language.",
+      "aliases": [
+        "ear",
+        "export administration regulations",
+        "ear compliant",
+        "ear compliance",
+        "export controls",
+        "export control compliance"
+      ],
+      "notes": [
+        "Treat as regulatory posture with operational constraints.",
+        "If ECCN is referenced, capture it as part of evidence notes rather than guessing."
+      ]
+    },
+
+    {
+      "id": "ECCN",
+      "canonical_name": "ECCN",
+      "category": "regulatory",
+      "assurance_type": "export_control_classification",
+      "description": "Export Control Classification Number referenced under EAR. Not a certification.",
+      "aliases": ["eccn", "export control classification number", "eccn classification"],
+      "notes": [
+        "ECCN is a classification label. Capture as a regulatory signal when cited, along with any specific ECCN code shown in evidence."
+      ]
+    }
+  ]
+}

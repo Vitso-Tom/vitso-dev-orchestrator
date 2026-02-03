@@ -1,0 +1,427 @@
+
+/* Professional Print Styles - Complete Override */
+@media print {
+    /* Page setup */
+    @page {
+        size: letter;
+        margin: 0.75in 0.75in 1in 0.75in;
+    }
+    
+    @page :first {
+        margin-top: 0.5in;
+    }
+    
+    /* Reset everything */
+    *, *::before, *::after {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    
+    html, body {
+        font-family: "Georgia", "Times New Roman", serif !important;
+        font-size: 11pt !important;
+        line-height: 1.5 !important;
+        background: white !important;
+        color: black !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    /* Hide UI elements */
+    nav, header, footer, .sidebar, .btn, button, 
+    .nav-links, .risk-preview, .similar-tools,
+    .no-print, .fas, .fa, i.fas, i.fa,
+    .navbar, .top-bar, .action-buttons {
+        display: none !important;
+    }
+    
+    /* Main container */
+    .results-container, .main-content, main, .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        position: static !important;
+        overflow: visible !important;
+    }
+    
+    /* === REPORT HEADER (Assessment Summary) === */
+    .card:first-of-type {
+        border: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 20pt !important;
+        border-bottom: 3pt solid black !important;
+    }
+    
+    .card:first-of-type .card-header {
+        display: none !important;
+    }
+    
+    .card:first-of-type::before {
+        content: "AI VENDOR SECURITY ASSESSMENT" !important;
+        display: block !important;
+        font-size: 18pt !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        letter-spacing: 2pt !important;
+        margin-bottom: 20pt !important;
+        padding-bottom: 10pt !important;
+        border-bottom: 1pt solid #666 !important;
+    }
+    
+    .summary-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8pt !important;
+    }
+    
+    .summary-item {
+        padding: 4pt 0 !important;
+    }
+    
+    .summary-item .label {
+        font-size: 8pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5pt !important;
+        color: #666 !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    .summary-item .value {
+        font-size: 12pt !important;
+        font-weight: bold !important;
+    }
+    
+    /* === CARDS === */
+    .card, .results-card, .context-card {
+        border: none !important;
+        border-bottom: 1pt solid #ccc !important;
+        border-radius: 0 !important;
+        margin: 0 0 15pt 0 !important;
+        padding: 0 0 15pt 0 !important;
+        page-break-inside: avoid !important;
+    }
+    
+    .card-header {
+        border: none !important;
+        padding: 0 0 8pt 0 !important;
+        margin: 0 0 8pt 0 !important;
+        border-bottom: 2pt solid black !important;
+    }
+    
+    .card-header h3 {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        margin: 0 !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    .card-body {
+        padding: 0 !important;
+    }
+    
+    /* === RISK SCORE === */
+    .risk-score-display {
+        text-align: center !important;
+        margin: 15pt 0 !important;
+    }
+    
+    .score-circle {
+        display: inline-block !important;
+        width: 80pt !important;
+        height: 80pt !important;
+        border: 4pt solid black !important;
+        border-radius: 50% !important;
+        background: white !important;
+        position: relative !important;
+        line-height: 1 !important;
+        padding-top: 20pt !important;
+    }
+    
+    .score-circle.critical { border-color: #b91c1c !important; }
+    .score-circle.high { border-color: #c2410c !important; }
+    .score-circle.moderate { border-color: #a16207 !important; }
+    .score-circle.low { border-color: #15803d !important; }
+    
+    .score-circle .score {
+        display: block !important;
+        font-size: 28pt !important;
+        font-weight: bold !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    .score-circle .label {
+        display: block !important;
+        font-size: 9pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1pt !important;
+        margin-top: 2pt !important;
+    }
+    
+    /* === RECOMMENDATION === */
+    .recommendation-box {
+        border: 2pt solid black !important;
+        padding: 12pt !important;
+        margin: 15pt 0 !important;
+        text-align: center !important;
+    }
+    
+    .recommendation-box h4 {
+        font-size: 10pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1pt !important;
+        margin: 0 0 8pt 0 !important;
+        color: #666 !important;
+    }
+    
+    .recommendation-badge {
+        font-size: 16pt !important;
+        font-weight: bold !important;
+        display: block !important;
+    }
+    
+    .recommendation-box.disqualified_no_go {
+        border-color: #b91c1c !important;
+    }
+    
+    .recommendation-box.conditional_no_go {
+        border-color: #c2410c !important;
+    }
+    
+    .recommendation-box.unqualified_go {
+        border-color: #15803d !important;
+    }
+    
+    /* === DISQUALIFIERS/CONDITIONS === */
+    .disqualifiers-box {
+        background: #fef2f2 !important;
+        border: 1pt solid #b91c1c !important;
+        padding: 10pt !important;
+        margin: 10pt 0 !important;
+    }
+    
+    .conditions-box {
+        background: #fffbeb !important;
+        border: 1pt solid #a16207 !important;
+        padding: 10pt !important;
+        margin: 10pt 0 !important;
+    }
+    
+    .disqualifiers-box h5, .conditions-box h5 {
+        font-size: 11pt !important;
+        margin: 0 0 8pt 0 !important;
+    }
+    
+    /* === CATEGORY SCORES === */
+    .category-scores {
+        margin: 15pt 0 !important;
+    }
+    
+    .score-row {
+        display: flex !important;
+        align-items: center !important;
+        margin: 6pt 0 !important;
+        page-break-inside: avoid !important;
+    }
+    
+    .category-label {
+        width: 120pt !important;
+        font-size: 10pt !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    .score-bar-container {
+        flex: 1 !important;
+        margin: 0 10pt !important;
+    }
+    
+    .score-bar-bg {
+        height: 10pt !important;
+        background: #e5e7eb !important;
+        border: 1pt solid #ccc !important;
+    }
+    
+    .score-bar-fill {
+        height: 100% !important;
+    }
+    
+    .score-bar-fill.low { background: #22c55e !important; }
+    .score-bar-fill.moderate { background: #eab308 !important; }
+    .score-bar-fill.high { background: #f97316 !important; }
+    .score-bar-fill.critical { background: #ef4444 !important; }
+    
+    .category-score {
+        width: 30pt !important;
+        text-align: right !important;
+        font-size: 10pt !important;
+        font-weight: bold !important;
+    }
+    
+    /* === ASSESSMENT CONTEXT === */
+    .context-card {
+        page-break-inside: avoid !important;
+    }
+    
+    .context-grid {
+        display: block !important;
+    }
+    
+    .context-item {
+        margin-bottom: 10pt !important;
+    }
+    
+    .context-item .label {
+        font-size: 9pt !important;
+        text-transform: uppercase !important;
+        color: #666 !important;
+        font-family: Arial, sans-serif !important;
+        display: block !important;
+        margin-bottom: 2pt !important;
+    }
+    
+    .context-item .value {
+        font-size: 10pt !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    .context-item.concerns {
+        background: #fffbeb !important;
+        border: 1pt solid #a16207 !important;
+        padding: 8pt !important;
+        margin-top: 10pt !important;
+    }
+    
+    .context-item.concerns .value {
+        color: #92400e !important;
+    }
+    
+    /* === CERTIFICATIONS === */
+    .certs-grid {
+        display: block !important;
+    }
+    
+    .cert-category {
+        margin-bottom: 10pt !important;
+        page-break-inside: avoid !important;
+    }
+    
+    .cert-category h4 {
+        font-size: 11pt !important;
+        font-weight: bold !important;
+        margin: 0 0 5pt 0 !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    .cert-badge {
+        display: inline-block !important;
+        border: 1pt solid #666 !important;
+        padding: 2pt 6pt !important;
+        margin: 2pt 4pt 2pt 0 !important;
+        font-size: 9pt !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    /* === RECONCILIATION TABLE === */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 9pt !important;
+        margin: 10pt 0 !important;
+    }
+    
+    th, td {
+        border: 1pt solid #999 !important;
+        padding: 5pt 8pt !important;
+        text-align: left !important;
+        vertical-align: top !important;
+    }
+    
+    th {
+        background: #f3f4f6 !important;
+        font-weight: bold !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    .status-badge {
+        display: inline-block !important;
+        padding: 1pt 4pt !important;
+        font-size: 8pt !important;
+        border: 1pt solid #666 !important;
+    }
+    
+    /* === RESEARCH REPORT === */
+    .research-report, .report-content {
+        font-size: 10pt !important;
+        line-height: 1.5 !important;
+    }
+    
+    .research-report h1 {
+        font-size: 16pt !important;
+        border-bottom: 2pt solid black !important;
+        padding-bottom: 5pt !important;
+        margin: 20pt 0 10pt 0 !important;
+        page-break-after: avoid !important;
+    }
+    
+    .research-report h2 {
+        font-size: 14pt !important;
+        border-bottom: 1pt solid #666 !important;
+        padding-bottom: 3pt !important;
+        margin: 15pt 0 8pt 0 !important;
+        page-break-after: avoid !important;
+    }
+    
+    .research-report h3 {
+        font-size: 12pt !important;
+        margin: 12pt 0 6pt 0 !important;
+        page-break-after: avoid !important;
+    }
+    
+    .research-report h4 {
+        font-size: 11pt !important;
+        margin: 10pt 0 5pt 0 !important;
+    }
+    
+    .research-report p {
+        margin: 6pt 0 !important;
+        text-align: justify !important;
+    }
+    
+    .research-report ul, .research-report ol {
+        margin: 6pt 0 6pt 20pt !important;
+        padding: 0 !important;
+    }
+    
+    .research-report li {
+        margin: 3pt 0 !important;
+    }
+    
+    .research-badge {
+        display: none !important;
+    }
+    
+    /* === PAGE BREAKS === */
+    .research-section {
+        page-break-before: always !important;
+    }
+    
+    h1, h2, h3 {
+        page-break-after: avoid !important;
+    }
+    
+    table, .cert-category, .score-row {
+        page-break-inside: avoid !important;
+    }
+    
+    /* === PRINT FOOTER WITH PAGE NUMBERS === */
+    @page {
+        @bottom-center {
+            content: "Page " counter(page) " of " counter(pages);
+            font-size: 9pt;
+            color: #666;
+        }
+    }
+}

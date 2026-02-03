@@ -1,0 +1,84 @@
+
+/* Print Cleanup - Hide UI, Fix Orphans */
+@media print {
+    /* Hide ALL navigation and buttons */
+    nav, .navbar, .nav-links, .top-bar, header, footer,
+    .btn, button, .action-buttons, .sidebar, .risk-preview,
+    .similar-tools, .no-print, .new-assessment-btn,
+    [class*="nav"], [class*="btn"], [class*="button"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Hide specific footer/action areas */
+    .page-footer, .results-footer, .assessment-actions,
+    .action-bar, .bottom-bar {
+        display: none !important;
+    }
+    
+    /* Prevent orphaned headers */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+        orphans: 3 !important;
+        widows: 3 !important;
+    }
+    
+    /* Keep lists together */
+    ul, ol {
+        page-break-inside: avoid !important;
+    }
+    
+    li {
+        page-break-inside: avoid !important;
+    }
+    
+    /* Keep paragraphs from breaking badly */
+    p {
+        orphans: 3 !important;
+        widows: 3 !important;
+    }
+    
+    /* Research report - better section handling */
+    .research-report h2, .markdown-body h2 {
+        page-break-before: auto !important;
+        margin-top: 12pt !important;
+    }
+    
+    /* Keep small sections together */
+    .research-report h3 + p,
+    .research-report h3 + ul,
+    .research-report h4 + p,
+    .research-report h4 + ul {
+        page-break-before: avoid !important;
+    }
+    
+    /* Avoid page break after section headers */
+    .research-report h2 + *,
+    .research-report h3 + *,
+    .markdown-body h2 + *,
+    .markdown-body h3 + * {
+        page-break-before: avoid !important;
+    }
+    
+    /* Multi-factor auth list - keep together */
+    .research-report ul {
+        page-break-inside: avoid !important;
+    }
+    
+    /* Tighter spacing in research report */
+    .research-report p, .markdown-body p {
+        margin: 3pt 0 !important;
+    }
+    
+    .research-report li, .markdown-body li {
+        margin: 1pt 0 !important;
+    }
+    
+    .research-report ul, .markdown-body ul,
+    .research-report ol, .markdown-body ol {
+        margin: 3pt 0 3pt 12pt !important;
+    }
+}

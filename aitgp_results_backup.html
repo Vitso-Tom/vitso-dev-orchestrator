@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Results - AI Tool Governance Platform</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/forms.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/results.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-shield-alt"></i> AI Tool Governance Platform</h1>
+                <p>Assessment Results</p>
+            </div>
+            <nav class="nav-tabs">
+                <a href="/" class="nav-tab">New Assessment</a>
+                <a href="/precedents" class="nav-tab">Precedents</a>
+                <a href="#" class="nav-tab">Dashboard</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="results-container">
+                <!-- Summary Card -->
+                <div class="card results-summary">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clipboard-check"></i> Assessment Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <span class="label">Tool Name</span>
+                                <span class="value">{{ assessment.tool_name }}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Vendor</span>
+                                <span class="value">{{ assessment.vendor }}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Assessment ID</span>
+                                <span class="value font-mono">{{ assessment.id }}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Timestamp</span>
+                                <span class="value">{{ assessment.timestamp }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Score Card -->
+                <div class="card risk-results">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie"></i> Risk Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="risk-score-display">
+                            <div class="score-circle {{ assessment.risk_analysis.overall_risk }}">
+                                <span class="score">{{ "%.0f"|format(assessment.risk_analysis.overall_score) }}</span>
+                                <span class="label">{{ assessment.risk_analysis.overall_risk|upper }}</span>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-box {{ assessment.risk_analysis.recommendation }}">
+                            <h4>Recommendation</h4>
+                            <span class="recommendation-badge">
+                                {% if assessment.risk_analysis.recommendation == 'go' %}
+                                    <i class="fas fa-check-circle"></i> GO
+                                {% elif assessment.risk_analysis.recommendation == 'conditional_go' %}
+                                    <i class="fas fa-exclamation-circle"></i> CONDITIONAL GO
+                                {% else %}
+                                    <i class="fas fa-times-circle"></i> NO-GO
+                                {% endif %}
+                            </span>
+                            <p>{{ assessment.risk_analysis.rationale }}</p>
+                        </div>
+
+                        <div class="category-scores">
+                            <h4>Category Scores</h4>
+                            {% for category, score in assessment.risk_analysis.category_scores.items() %}
+                            <div class="category-row">
+                                <span class="category-name">{{ category|replace('_', ' ')|title }}</span>
+                                <div class="score-bar">
+                                    <div class="score-fill {% if score < 30 %}low{% elif score < 60 %}moderate{% else %}high{% endif %}" 
+                                         style="width: {{ score }}%"></div>
+                                </div>
+                                <span class="score-value">{{ "%.0f"|format(score) }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conditions Card -->
+                {% if assessment.risk_analysis.conditions %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-tasks"></i> Required Conditions</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="conditions-list">
+                            {% for condition in assessment.risk_analysis.conditions %}
+                            <li><i class="fas fa-check"></i> {{ condition|replace('_', ' ')|title }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Control Requirements Card -->
+                {% if assessment.risk_analysis.control_requirements %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-lock"></i> Control Requirements</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for category, controls in assessment.risk_analysis.control_requirements.items() %}
+                        <div class="control-category">
+                            <h5>{{ category|title }}</h5>
+                            <ul>
+                                {% for control in controls %}
+                                <li>{{ control|replace('_', ' ')|title }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Reconciliation Table -->
+                {% if assessment.reconciliation %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-balance-scale"></i> Input vs Research Reconciliation</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="reconciliation-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Your Input</th>
+                                    <th>Research Finding</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in assessment.reconciliation %}
+                                <tr class="recon-{{ item.status }}">
+                                    <td>{{ item.field }}</td>
+                                    <td>{{ item.user_input }}</td>
+                                    <td>{{ item.research_finding }}</td>
+                                    <td>
+                                        {% if item.status == 'confirmed' %}
+                                            <span class="status-badge confirmed"><i class="fas fa-check-circle"></i> Confirmed</span>
+                                        {% elif item.status == 'conflict' %}
+                                            <span class="status-badge conflict"><i class="fas fa-exclamation-triangle"></i> Conflict</span>
+                                        {% elif item.status == 'unverified' %}
+                                            <span class="status-badge unverified"><i class="fas fa-question-circle"></i> Unverified</span>
+                                        {% elif item.status == 'new_info' %}
+                                            <span class="status-badge new-info"><i class="fas fa-plus-circle"></i> New Info</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+                <!-- Vendor Research Card -->
+                {% if assessment.vendor_research and assessment.vendor_research.success %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-search"></i> AI Vendor Research</h3>
+                        <span class="research-badge">{{ assessment.vendor_research.total_facts_found }} facts found</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="research-meta">
+                            <span><i class="fas fa-clock"></i> {{ assessment.vendor_research.research_timestamp }}</span>
+                            <span><i class="fas fa-chart-line"></i> Confidence: {{ assessment.vendor_research.confidence_level }}</span>
+                        </div>
+                        <div class="research-report markdown-body">
+                            {{ assessment.vendor_research.synthesized_report | markdown | safe }}
+                        </div>
+                    </div>
+                </div>
+                {% elif assessment.vendor_research and not assessment.vendor_research.success %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-search"></i> AI Vendor Research</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="error-msg"><i class="fas fa-exclamation-circle"></i> Research failed: {{ assessment.vendor_research.error }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Actions -->
+                <div class="results-actions">
+                    <a href="/" class="btn btn-primary"><i class="fas fa-plus"></i> New Assessment</a>
+                    <button onclick="window.print()" class="btn btn-secondary"><i class="fas fa-print"></i> Print Report</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 AI Tool Governance Platform. Enabling secure AI adoption in healthcare.</p>
+        </footer>
+    </div>
+
+    <style>
+        .results-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .summary-item .label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .summary-item .value {
+            font-size: 1rem;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+        
+        .risk-score-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .score-circle {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 4px solid #334155;
+        }
+        
+        .score-circle.low { border-color: #10b981; }
+        .score-circle.moderate { border-color: #f59e0b; }
+        .score-circle.high { border-color: #ef4444; }
+        
+        .score-circle .score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+        
+        .score-circle .label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+        
+        .score-circle.low .label { color: #10b981; }
+        .score-circle.moderate .label { color: #f59e0b; }
+        .score-circle.high .label { color: #ef4444; }
+        
+        .category-scores h4 {
+            color: #f1f5f9;
+            margin: 0 0 1rem 0;
+        }
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .category-name {
+            width: 150px;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        .score-bar {
+            flex: 1;
+            height: 10px;
+            background: #334155;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .score-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+        .score-fill.low { background: #10b981; }
+        .score-fill.moderate { background: #f59e0b; }
+        .score-fill.high { background: #ef4444; }
+        .score-value {
+            width: 40px;
+            text-align: right;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+        .control-category h5 {
+            color: #f1f5f9;
+            margin: 0 0 0.75rem 0;
+        }
+        .control-category li {
+            color: #e2e8f0;
+        }
+        .conditions-list li {
+            color: #e2e8f0;
+        }
+        
+        .recommendation-box {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+        }
+        
+        .recommendation-box h4 {
+            margin: 0 0 0.75rem 0;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        .recommendation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .recommendation-box.go .recommendation-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .recommendation-box.conditional_go .recommendation-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .recommendation-box.no_go .recommendation-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .recommendation-box p {
+            margin: 1rem 0 0 0;
+            color: #cbd5e1;
+        }
+        
+        .category-scores h4 {
+            margin: 0 0 1rem 0;
+            color: #f1f5f9;
+        }
+        
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .category-name {
+            width: 150px;
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+        
+        .score-bar {
+            flex: 1;
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .score-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .score-fill.low { background: #10b981; }
+        .score-fill.moderate { background: #f59e0b; }
+        .score-fill.high { background: #ef4444; }
+        
+        .score-value {
+            width: 40px;
+            text-align: right;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        
+        .conditions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .conditions-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #334155;
+            color: #cbd5e1;
+        }
+        
+        .conditions-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .conditions-list li i {
+            color: #f59e0b;
+        }
+        
+        .control-category {
+            margin-bottom: 1.5rem;
+        }
+        
+        .control-category:last-child {
+            margin-bottom: 0;
+        }
+        
+        .control-category h5 {
+            color: #f1f5f9;
+            margin: 0 0 0.75rem 0;
+            font-size: 1rem;
+        }
+        
+        .control-category ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .control-category li {
+            padding: 0.375rem 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            font-size: 0.8125rem;
+            color: #cbd5e1;
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            padding-top: 1rem;
+        }
+        /* Reconciliation Table Styles */
+        .reconciliation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .reconciliation-table th,
+        .reconciliation-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        .reconciliation-table th {
+            background: #0f172a;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .reconciliation-table td {
+            color: #e2e8f0;
+        }
+        .recon-conflict {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .recon-unverified {
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .recon-new-info {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-badge.confirmed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        .status-badge.conflict {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .status-badge.unverified {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        .status-badge.new-info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+    </style>
+</body>
+</html>
